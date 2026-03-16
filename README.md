@@ -1,135 +1,123 @@
+Här är en **förbättrad och GitHub-vänlig `README.md`**. Den använder tydliga sektioner, badges, emojis, struktur och layout som brukar se bra ut på GitHub-repon. Den är också lite mer “produktlik”, vilket gör projektet mer professionellt om andra hittar det.
+
+---
+
 # README.md
 
 ```markdown
-# PennyPlan
+# 💰 PennyPlan
 
-PennyPlan är en enkel och modern budgetapp som hjälper användare att få kontroll över sin privatekonomi.
+![Vue](https://img.shields.io/badge/Vue.js-Frontend-42b883)
+![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-Appen gör det möjligt att:
-- registrera inkomster och utgifter
-- följa sin budget per kategori
-- se hur mycket pengar som finns kvar varje månad
-- sätta upp sparmål och följa sin progress
+**PennyPlan** is a simple and modern budgeting app that helps users understand and control their personal finances.
 
-Fokus ligger på **enkelhet, tydlighet och snabb överblick**.
-
----
-
-# Vision
-
-Målet är att skapa en budgetapp som gör privatekonomi **enkel och motiverande**, utan att kännas som ett komplext ekonomisystem.
-
-Appen ska:
-- vara snabb att använda
-- fungera bra på mobil
-- ge tydlig ekonomisk överblick
+The goal is to make budgeting **clear, fast, and motivating** — without feeling like complex financial software.
 
 ---
 
-# Tech Stack
+# ✨ Features
+
+### 📊 Dashboard
+Quick overview of your finances:
+
+- Monthly income
+- Monthly expenses
+- Remaining balance
+- Budget overview
+- Savings goal progress
+
+---
+
+### 💳 Transactions
+
+Users can:
+
+- Add income or expenses
+- Select category
+- Add notes
+- Track transactions by month
+
+---
+
+### 📂 Budget
+
+Users can:
+
+- Set monthly budgets per category
+- Track spending vs budget
+- See visual budget status
+
+---
+
+### 🎯 Savings Goals
+
+Create goals such as:
+
+- Emergency fund
+- Vacation
+- New car
+- Equipment
+
+Track progress toward a target amount.
+
+---
+
+# 🧱 Tech Stack
 
 ## Frontend
-- Vue.js
-- HTML
-- CSS
+
+- **Vue.js**
+- **HTML**
+- **CSS**
 - JavaScript / TypeScript
 
-Frontend utvecklas med fokus på:
-- mobilvänlig design
-- tydliga dashboards
-- snabb registrering av transaktioner
+Focus:
 
-Frontend-design skill används för att skapa en konsekvent och tydlig UI-struktur.
+- mobile-friendly UI
+- fast interactions
+- clean dashboard experience
 
 ---
 
-## Backend / Plattform
+## Backend
 
-Supabase används som backend.
+Powered by **Supabase**
 
-Supabase tillhandahåller:
+Supabase provides:
 
-- PostgreSQL databas
+- PostgreSQL database
 - Authentication
-- API-access
+- API access
 - Row Level Security
-- möjlighet till realtime-funktioner i framtiden
+- Realtime capabilities (future)
 
 ---
 
-## Authentication
+# 🔐 Authentication
 
-Authentication hanteras via **Supabase Auth**.
+Authentication is handled with **Supabase Auth**.
 
-Initialt används:
+Supported login method:
 
-- Email / Password login
+- Email / Password
 
-Supabase hanterar:
+Supabase manages:
 
-- användarregistrering
-- sessioner
-- tokens
-- säker autentisering
+- sessions
+- JWT tokens
+- user identity
 
-All användardata skyddas via **Row Level Security (RLS)** i databasen.
-
----
-
-# Kärnfunktioner (MVP)
-
-## Dashboard
-Visar:
-
-- månadens inkomster
-- månadens utgifter
-- kvar att spendera
-- budgetstatus
-- sparmål
+All data is protected using **Row Level Security (RLS)**.
 
 ---
 
-## Transaktioner
+# 🗄️ Database Model
 
-Användaren kan:
+### User
 
-- registrera inkomster
-- registrera utgifter
-- välja kategori
-- ange datum
-- lägga till anteckning
-
----
-
-## Budget
-
-Användaren kan:
-
-- sätta månadsbudget per kategori
-- se hur mycket som spenderats
-- få visuell status över budget
-
----
-
-## Sparmål
-
-Användaren kan:
-
-- skapa sparmål
-- ange målbelopp
-- följa progression
-
-Exempel:
-
-- buffert
-- resa
-- ny bil
-
----
-
-# Datamodell
-
-## User
 ```
 
 id
@@ -140,7 +128,10 @@ createdAt
 
 ```
 
-## Category
+---
+
+### Category
+
 ```
 
 id
@@ -151,7 +142,10 @@ color
 
 ```
 
-## Transaction
+---
+
+### Transaction
+
 ```
 
 id
@@ -165,7 +159,10 @@ createdAt
 
 ```
 
-## BudgetLimit
+---
+
+### BudgetLimit
+
 ```
 
 id
@@ -176,7 +173,10 @@ amount
 
 ```
 
-## SavingsGoal
+---
+
+### SavingsGoal
+
 ```
 
 id
@@ -191,7 +191,7 @@ createdAt
 
 ---
 
-# Projektstruktur (förslag)
+# 📁 Project Structure
 
 ```
 
@@ -213,9 +213,9 @@ claude.md
 
 ---
 
-# Installation
+# 🚀 Getting Started
 
-### 1. Klona projektet
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-repo/pennyplan.git
@@ -223,7 +223,7 @@ git clone https://github.com/your-repo/pennyplan.git
 
 ---
 
-### 2. Installera dependencies
+## 2. Install dependencies
 
 ```bash
 npm install
@@ -231,7 +231,7 @@ npm install
 
 ---
 
-### 3. Starta utvecklingsserver
+## 3. Start development server
 
 ```bash
 npm run dev
@@ -239,72 +239,93 @@ npm run dev
 
 ---
 
-# Supabase Setup
+# ⚙️ Supabase Setup
 
-1. Skapa ett projekt på:
+1. Create a project at:
 
 [https://supabase.com](https://supabase.com)
 
-2. Skapa följande tabeller:
+2. Enable:
+
+* Authentication
+* Row Level Security
+
+3. Create tables:
 
 * transactions
 * categories
 * budgets
 * savings_goals
 
-3. Aktivera:
-
-* authentication
-* row level security
-
-4. Lägg in projektets:
+4. Add environment variables:
 
 ```
-SUPABASE_URL
-SUPABASE_ANON_KEY
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
 ```
 
-i `.env` filen.
+in `.env`.
 
 ---
 
-# Roadmap
+# 🛣 Roadmap
 
-## Version 1
+### Version 1 (MVP)
 
 * Dashboard
-* Transaktioner
-* Budget per kategori
-* Sparmål
-
-## Version 2
-
-* återkommande transaktioner
-* bättre statistik
-* export till Excel/PDF
-
-## Version 3
-
-* bankintegration
-* AI-baserade budgetrekommendationer
-* delad hushållsbudget
+* Transactions
+* Budget tracking
+* Savings goals
 
 ---
 
-# UX Principer
+### Version 2
 
-Appen ska vara:
-
-* enkel
-* snabb
-* tydlig
-* mobilvänlig
-
-Så få klick som möjligt ska krävas för att registrera en transaktion.
+* Recurring transactions
+* Financial insights
+* Export to Excel/PDF
 
 ---
 
-# License
+### Version 3
+
+* Bank integrations
+* AI-based budget suggestions
+* Shared household budgets
+
+---
+
+# 🎨 UX Principles
+
+The application should be:
+
+* Simple
+* Fast
+* Mobile friendly
+* Easy to understand
+
+Users should be able to **register a transaction in seconds**.
+
+---
+
+# 📖 Documentation
+
+Project documentation:
+
+```
+/docs/claude.md
+```
+
+Contains:
+
+* product concept
+* architecture ideas
+* roadmap
+* development guidelines
+
+---
+
+# 📜 License
 
 MIT License
 
@@ -312,12 +333,22 @@ MIT License
 
 ---
 
-Om du vill kan jag också hjälpa dig skapa:
+💡 **Tips:**  
+På GitHub blir README extra snygg om du även lägger till:
 
-- **en riktigt bra mappstruktur för Vue + Supabase**
-- **SQL-schema för Supabase**
-- **RLS policies (väldigt viktigt för säkerhet)**
-- **första Vue-komponenterna för Dashboard och Transactions**
+- `docs/` folder
+- `screenshots/` folder
+- `CONTRIBUTING.md`
+- `CHANGELOG.md`
 
-Det gör att du kan gå från **idé → fungerande app på ~1–2 timmar**.
+---
+
+Om du vill kan jag också göra en **extremt snygg GitHub README** med:
+
+- preview-bilder
+- arkitekturdiagram
+- feature-cards
+- UI mockups
+
+Den typen som ser ut som ett **riktigt startup-repo**.
 ```
