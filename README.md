@@ -1,10 +1,4 @@
-Här är en **förbättrad och GitHub-vänlig `README.md`**. Den använder tydliga sektioner, badges, emojis, struktur och layout som brukar se bra ut på GitHub-repon. Den är också lite mer “produktlik”, vilket gör projektet mer professionellt om andra hittar det.
 
----
-
-# README.md
-
-```markdown
 # 💰 PennyPlan
 
 ![Vue](https://img.shields.io/badge/Vue.js-Frontend-42b883)
