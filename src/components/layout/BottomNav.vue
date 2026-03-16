@@ -58,7 +58,12 @@ function isActive(path) {
 </script>
 
 <template>
-  <nav class="bottom-nav" role="navigation" aria-label="Huvudnavigation">
+  <nav class="app-nav" role="navigation" aria-label="Huvudnavigation">
+    <div class="nav-logo" aria-hidden="true">
+      <span class="nav-logo__mark">P</span>
+      <span class="nav-logo__name">PennyPlan</span>
+    </div>
+
     <RouterLink
       v-for="item in navItems"
       :key="item.path"
@@ -75,7 +80,8 @@ function isActive(path) {
 </template>
 
 <style scoped>
-.bottom-nav {
+/* ── Mobile: bottom bar ── */
+.app-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -84,9 +90,14 @@ function isActive(path) {
   background-color: var(--color-card);
   border-top: 1px solid var(--color-border);
   display: flex;
+  flex-direction: row;
   align-items: stretch;
   z-index: 50;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.nav-logo {
+  display: none;
 }
 
 .nav-item {
@@ -143,5 +154,96 @@ function isActive(path) {
   font-weight: 500;
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+/* ── Desktop: left sidebar ── */
+@media (min-width: 768px) {
+  .app-nav {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    flex-direction: column;
+    align-items: stretch;
+    border-top: none;
+    border-right: 1px solid var(--color-border);
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+    padding: 1.5rem 0 2rem;
+    overflow-y: auto;
+    gap: 2px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0.75rem;
+  }
+
+  .nav-logo__mark {
+    width: 30px;
+    height: 30px;
+    background-color: var(--color-primary);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .nav-logo__name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-item {
+    flex: unset;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6875rem 1.25rem;
+    border-radius: 0;
+    margin: 0 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-item::before {
+    display: none;
+  }
+
+  .nav-item--active {
+    background-color: rgba(79, 155, 143, 0.1);
+    color: var(--color-primary);
+  }
+
+  .nav-item:not(.nav-item--active):hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .nav-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-icon :deep(svg) {
+    width: 20px;
+    height: 20px;
+  }
 }
 </style>

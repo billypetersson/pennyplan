@@ -11,16 +11,18 @@ defineProps({
 
 <template>
   <div class="app-layout">
-    <header v-if="title" class="app-header">
-      <h1 class="app-header__title">{{ title }}</h1>
-      <slot name="header-right" />
-    </header>
-
-    <main class="app-main">
-      <slot />
-    </main>
-
     <BottomNav />
+
+    <div class="app-content">
+      <header v-if="title" class="app-header">
+        <h1 class="app-header__title">{{ title }}</h1>
+        <slot name="header-right" />
+      </header>
+
+      <main class="app-main">
+        <slot />
+      </main>
+    </div>
   </div>
 </template>
 
@@ -29,9 +31,13 @@ defineProps({
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  max-width: 480px;
-  margin: 0 auto;
-  position: relative;
+}
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
 }
 
 .app-header {
@@ -61,5 +67,27 @@ defineProps({
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* ── Desktop layout ── */
+@media (min-width: 768px) {
+  .app-layout {
+    flex-direction: row;
+  }
+
+  .app-content {
+    margin-left: var(--sidebar-width);
+    max-width: calc(100vw - var(--sidebar-width));
+  }
+
+  .app-header {
+    padding: 0 2rem;
+  }
+
+  .app-main {
+    padding: 2rem;
+    max-width: 960px;
+    width: 100%;
+  }
 }
 </style>
