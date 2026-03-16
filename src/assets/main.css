@@ -1,0 +1,407 @@
+/* ===========================
+   CSS Variables
+   =========================== */
+:root {
+  --color-primary: #4F9B8F;
+  --color-primary-light: #6DB8AC;
+  --color-primary-dark: #3A7A70;
+  --color-bg: #F8F9FA;
+  --color-card: #ffffff;
+  --color-text: #1A1A2E;
+  --color-text-muted: #6B7280;
+  --color-border: #E5E7EB;
+  --color-danger: #EF4444;
+  --color-danger-light: #FEF2F2;
+  --color-success: #10B981;
+  --color-success-light: #ECFDF5;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FFFBEB;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --nav-height: 68px;
+  --header-height: 56px;
+}
+
+/* ===========================
+   CSS Reset
+   =========================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.625rem 0.875rem;
+  background-color: var(--color-card);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 155, 143, 0.15);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* ===========================
+   Card Component
+   =========================== */
+.card {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.card-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.375rem;
+}
+
+/* ===========================
+   Button Components
+   =========================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #DC2626;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-bg);
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+}
+
+/* ===========================
+   Badge Component
+   =========================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.badge-income {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.badge-expense {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.badge-neutral {
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+/* ===========================
+   Form Utilities
+   =========================== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+/* ===========================
+   Section Heading
+   =========================== */
+.section-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+/* ===========================
+   Amount Display
+   =========================== */
+.amount-income {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.amount-expense {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.amount-negative {
+  color: var(--color-danger);
+}
+
+/* ===========================
+   Empty State
+   =========================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.empty-state-text {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+/* ===========================
+   Divider
+   =========================== */
+.divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 0.75rem 0;
+}
+
+/* ===========================
+   Progress Bar
+   =========================== */
+.progress-bar-track {
+  height: 6px;
+  background-color: var(--color-bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  transition: width 0.4s ease;
+}
+
+/* ===========================
+   Overlay / Modal backdrop
+   =========================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* ===========================
+   Scrollbar styling
+   =========================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+}
+
+/* ===========================
+   Animations
+   =========================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
