@@ -31,7 +31,7 @@ function validate() {
     e.amount = 'Ange ett giltigt belopp'
   }
   if (!categoryId.value) {
-    e.categoryId = 'Välj en kategori'
+    e.category_id = 'Välj en kategori'
   }
   if (!date.value) {
     e.date = 'Ange ett datum'
@@ -46,7 +46,7 @@ function handleSubmit() {
   emit('submit', {
     type: type.value,
     amount: Number(amount.value),
-    categoryId: categoryId.value,
+    category_id: categoryId.value,
     date: date.value,
     note: note.value.trim()
   })
@@ -132,7 +132,7 @@ function handleBackdropClick(e) {
               <select
                 id="category"
                 v-model="categoryId"
-                :class="{ 'input-error': errors.categoryId }"
+                :class="{ 'input-error': errors.category_id }"
               >
                 <option value="" disabled>Välj kategori...</option>
                 <option
@@ -150,7 +150,7 @@ function handleBackdropClick(e) {
                 </svg>
               </span>
             </div>
-            <span v-if="errors.categoryId" class="form-error">{{ errors.categoryId }}</span>
+            <span v-if="errors.category_id" class="form-error">{{ errors.category_id }}</span>
           </div>
 
           <!-- Date -->

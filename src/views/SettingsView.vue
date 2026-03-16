@@ -1,8 +1,18 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useAuthStore } from '@/stores/auth'
 
-const appVersion = '0.1.0'
+const router = useRouter()
+const authStore = useAuthStore()
+
+const appVersion = '0.2.0'
 const currentYear = new Date().getFullYear()
+
+async function handleSignOut() {
+  await authStore.signOut()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -44,15 +54,31 @@ const currentYear = new Date().getFullYear()
             <span class="settings-row__icon" aria-hidden="true">💾</span>
             <div>
               <span class="settings-row__label">Lagring</span>
-              <span class="settings-row__value">Lokalt i webbläsaren</span>
+              <span class="settings-row__value">Supabase (molnet)</span>
             </div>
           </div>
         </div>
         <div class="divider" />
         <p class="settings-note">
-          I fas 2 kommer dina data synkas säkert till molnet via Supabase,
-          vilket gör det möjligt att komma åt dem från flera enheter.
+          Dina data sparas säkert i molnet via Supabase och är tillgängliga från alla dina enheter.
         </p>
+      </div>
+    </section>
+
+    <!-- Sign out section -->
+    <section>
+      <h2 class="section-heading">Konto</h2>
+      <div class="card settings-section">
+        <div class="settings-row">
+          <div class="settings-row__left">
+            <span class="settings-row__icon" aria-hidden="true">🚪</span>
+            <div>
+              <span class="settings-row__label">Logga ut</span>
+              <span class="settings-row__value">Avslutar din session</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" @click="handleSignOut">Logga ut</button>
+        </div>
       </div>
     </section>
 
@@ -77,7 +103,7 @@ const currentYear = new Date().getFullYear()
         <div class="divider" />
         <div class="settings-row">
           <span class="settings-row__label">Version</span>
-          <span class="settings-row__meta">{{ appVersion }} (fas 1)</span>
+          <span class="settings-row__meta">{{ appVersion }} (fas 2)</span>
         </div>
         <div class="divider" />
         <div class="settings-row">

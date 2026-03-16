@@ -15,7 +15,7 @@ const emit = defineEmits(['delete'])
 const categoriesStore = useCategoriesStore()
 const showDeleteConfirm = ref(false)
 
-const category = categoriesStore.getCategoryById(props.transaction.categoryId)
+const category = categoriesStore.getCategoryById(props.transaction.category_id)
 
 function handleDelete() {
   emit('delete', props.transaction.id)
@@ -37,7 +37,7 @@ function handleDelete() {
 
       <!-- Info -->
       <div class="transaction-item__info">
-        <span class="transaction-item__category">{{ category?.name ?? transaction.categoryId }}</span>
+        <span class="transaction-item__category">{{ category?.name ?? transaction.category_id }}</span>
         <span v-if="transaction.note" class="transaction-item__note">{{ transaction.note }}</span>
       </div>
 
