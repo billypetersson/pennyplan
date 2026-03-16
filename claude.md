@@ -9,6 +9,7 @@
 **Design Support:** Use frontend-design skill for UI/UX, component structure, and visual direction in the frontend work.
 
 **Language:** App language in Swedish, currency is SEK.
+
 ---
 
 ## Product Idea
