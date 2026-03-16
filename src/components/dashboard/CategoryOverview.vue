@@ -7,7 +7,7 @@ const props = defineProps({
   expensesByCategory: {
     type: Array,
     required: true
-    // [{ categoryId, amount }]
+    // [{ category_id, amount }]
   }
 })
 
@@ -16,7 +16,7 @@ const categoriesStore = useCategoriesStore()
 const rows = computed(() => {
   const max = props.expensesByCategory[0]?.amount ?? 1
   return props.expensesByCategory.map((item) => {
-    const category = categoriesStore.getCategoryById(item.categoryId)
+    const category = categoriesStore.getCategoryById(item.category_id)
     return {
       ...item,
       category,
@@ -30,7 +30,7 @@ const rows = computed(() => {
   <div v-if="rows.length > 0" class="category-overview">
     <div
       v-for="row in rows"
-      :key="row.categoryId"
+      :key="row.category_id"
       class="category-row"
     >
       <div class="category-row__header">
@@ -38,7 +38,7 @@ const rows = computed(() => {
           <span class="category-row__icon" aria-hidden="true">
             {{ row.category?.icon ?? '📦' }}
           </span>
-          <span class="category-row__name">{{ row.category?.name ?? row.categoryId }}</span>
+          <span class="category-row__name">{{ row.category?.name ?? row.category_id }}</span>
         </div>
         <span class="category-row__amount">{{ formatCurrency(row.amount) }}</span>
       </div>

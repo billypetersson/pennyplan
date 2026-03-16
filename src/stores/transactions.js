@@ -1,107 +1,91 @@
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { supabase } from '@/lib/supabase'
+import { prevMonth, nextMonth } from '@/utils/format'
 
-const STORAGE_KEY = 'pennyplan_transactions'
-
-function getInitialMonth() {
+function currentMonth() {
   const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  return `${year}-${month}`
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 }
 
-function loadFromStorage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch {
-    return []
+export const useTransactionsStore = defineStore('transactions', () => {
+  const transactions = ref([])
+  const loading = ref(false)
+  const selectedMonth = ref(currentMonth())
+
+  const transactionsByMonth = computed(() =>
+    transactions.value.filter(t => t.date.startsWith(selectedMonth.value))
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+  )
+
+  const monthlyIncome = computed(() =>
+    transactionsByMonth.value
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + Number(t.amount), 0)
+  )
+
+  const monthlyExpenses = computed(() =>
+    transactionsByMonth.value
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + Number(t.amount), 0)
+  )
+
+  const remainingBalance = computed(() => monthlyIncome.value - monthlyExpenses.value)
+
+  const expensesByCategory = computed(() => {
+    const map = {}
+    transactionsByMonth.value
+      .filter(t => t.type === 'expense')
+      .forEach(t => {
+        if (!map[t.category_id]) map[t.category_id] = 0
+        map[t.category_id] += Number(t.amount)
+      })
+    return Object.entries(map).map(([category_id, amount]) => ({ category_id, amount }))
+      .sort((a, b) => b.amount - a.amount)
+  })
+
+  async function fetchTransactions() {
+    loading.value = true
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .order('date', { ascending: false })
+    if (!error) transactions.value = data
+    loading.value = false
   }
-}
 
-function saveToStorage(transactions) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions))
-  } catch (e) {
-    console.error('Kunde inte spara transaktioner:', e)
+  async function addTransaction(payload) {
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data, error } = await supabase
+      .from('transactions')
+      .insert({ ...payload, user_id: user.id })
+      .select()
+      .single()
+    if (error) throw error
+    transactions.value.unshift(data)
   }
-}
 
-export const useTransactionsStore = defineStore('transactions', {
-  state: () => ({
-    transactions: loadFromStorage(),
-    loading: false,
-    selectedMonth: getInitialMonth()
-  }),
+  async function deleteTransaction(id) {
+    const { error } = await supabase.from('transactions').delete().eq('id', id)
+    if (error) throw error
+    transactions.value = transactions.value.filter(t => t.id !== id)
+  }
 
-  getters: {
-    transactionsByMonth: (state) => {
-      return state.transactions
-        .filter((t) => t.date.startsWith(state.selectedMonth))
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-    },
+  function setMonth(month) {
+    selectedMonth.value = month
+  }
 
-    monthlyIncome: (state) => {
-      return state.transactions
-        .filter((t) => t.date.startsWith(state.selectedMonth) && t.type === 'income')
-        .reduce((sum, t) => sum + Number(t.amount), 0)
-    },
+  function goToPrevMonth() {
+    selectedMonth.value = prevMonth(selectedMonth.value)
+  }
 
-    monthlyExpenses: (state) => {
-      return state.transactions
-        .filter((t) => t.date.startsWith(state.selectedMonth) && t.type === 'expense')
-        .reduce((sum, t) => sum + Number(t.amount), 0)
-    },
+  function goToNextMonth() {
+    selectedMonth.value = nextMonth(selectedMonth.value)
+  }
 
-    remainingBalance(state) {
-      return this.monthlyIncome - this.monthlyExpenses
-    },
-
-    expensesByCategory(state) {
-      const expenseTransactions = state.transactions.filter(
-        (t) => t.date.startsWith(state.selectedMonth) && t.type === 'expense'
-      )
-
-      const grouped = {}
-      for (const t of expenseTransactions) {
-        if (!grouped[t.categoryId]) {
-          grouped[t.categoryId] = {
-            categoryId: t.categoryId,
-            amount: 0
-          }
-        }
-        grouped[t.categoryId].amount += Number(t.amount)
-      }
-
-      return Object.values(grouped).sort((a, b) => b.amount - a.amount)
-    }
-  },
-
-  actions: {
-    addTransaction(data) {
-      const transaction = {
-        id: crypto.randomUUID(),
-        type: data.type,
-        amount: Number(data.amount),
-        categoryId: data.categoryId,
-        date: data.date,
-        note: data.note ?? '',
-        createdAt: new Date().toISOString()
-      }
-      this.transactions.unshift(transaction)
-      saveToStorage(this.transactions)
-      return transaction
-    },
-
-    deleteTransaction(id) {
-      const index = this.transactions.findIndex((t) => t.id === id)
-      if (index !== -1) {
-        this.transactions.splice(index, 1)
-        saveToStorage(this.transactions)
-      }
-    },
-
-    setMonth(month) {
-      this.selectedMonth = month
-    }
+  return {
+    transactions, loading, selectedMonth,
+    transactionsByMonth, monthlyIncome, monthlyExpenses, remainingBalance, expensesByCategory,
+    fetchTransactions, addTransaction, deleteTransaction, setMonth, goToPrevMonth, goToNextMonth
   }
 })

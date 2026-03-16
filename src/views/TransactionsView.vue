@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import MonthSelector from '@/components/shared/MonthSelector.vue'
@@ -14,12 +14,16 @@ const showForm = ref(false)
 
 const transactions = computed(() => transactionsStore.transactionsByMonth)
 
+onMounted(() => {
+  transactionsStore.fetchTransactions()
+})
+
 function onMonthChange(month) {
   transactionsStore.setMonth(month)
 }
 
-function handleAddTransaction(data) {
-  transactionsStore.addTransaction(data)
+async function handleAddTransaction(data) {
+  await transactionsStore.addTransaction(data)
   showForm.value = false
 }
 
@@ -47,7 +51,10 @@ function handleDeleteTransaction(id) {
     </template>
 
     <!-- Month selector -->
-    <MonthSelector :model-value="selectedMonth" @update:model-value="onMonthChange" />
+    <MonthSelector
+      :model-value="selectedMonth"
+      @update:model-value="onMonthChange"
+    />
 
     <!-- Transaction list -->
     <TransactionList

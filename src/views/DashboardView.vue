@@ -1,13 +1,17 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import MonthSelector from '@/components/shared/MonthSelector.vue'
 import SummaryCards from '@/components/dashboard/SummaryCards.vue'
 import CategoryOverview from '@/components/dashboard/CategoryOverview.vue'
 import { useTransactionsStore } from '@/stores/transactions'
+import { useAuthStore } from '@/stores/auth'
 
+const router = useRouter()
 const transactionsStore = useTransactionsStore()
+const authStore = useAuthStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
 
 const income = computed(() => transactionsStore.monthlyIncome)
@@ -16,15 +20,31 @@ const balance = computed(() => transactionsStore.remainingBalance)
 const expensesByCategory = computed(() => transactionsStore.expensesByCategory)
 const hasTransactions = computed(() => transactionsStore.transactionsByMonth.length > 0)
 
+onMounted(() => {
+  transactionsStore.fetchTransactions()
+})
+
 function onMonthChange(month) {
   transactionsStore.setMonth(month)
+}
+
+async function handleSignOut() {
+  await authStore.signOut()
+  router.push('/login')
 }
 </script>
 
 <template>
   <AppLayout title="PennyPlan">
+    <template #header-right>
+      <button class="btn btn-ghost btn-sm" @click="handleSignOut">Logga ut</button>
+    </template>
+
     <!-- Month selector -->
-    <MonthSelector :model-value="selectedMonth" @update:model-value="onMonthChange" />
+    <MonthSelector
+      :model-value="selectedMonth"
+      @update:model-value="onMonthChange"
+    />
 
     <!-- Summary cards -->
     <SummaryCards
