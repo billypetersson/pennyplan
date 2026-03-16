@@ -1,124 +1,135 @@
 # Claude.md
 
-## Projekt
+## Project
 
-**Arbetsnamn:** PennyPlan
-**Designstöd:** Använd frontend-design skill för UI/UX, komponentstruktur och visuell riktning i frontend-arbetet
-**Typ:** Budgetapp för privatpersoner
-**Mål:** Hjälpa användare att få enkel och tydlig kontroll över inkomster, utgifter, månadsbudget och sparmål utan att appen känns tung eller komplicerad.
+**Working Name:** PennyPlan
+**Type:** Budget application for individuals
+**Goal:** Help users gain simple and clear control over income, expenses, monthly budgets, and savings goals without the application feeling heavy or complicated.
 
----
-
-## Produktidé
-
-PennyPlan är en enkel och modern budgetapp för privatpersoner som vill:
-
-* registrera inkomster och utgifter
-* följa sin månadsbudget per kategori
-* se hur mycket pengar som finns kvar att spendera
-* sätta upp sparmål och följa utvecklingen
-
-Fokus i första versionen är **enkelhet, tydlighet och snabb överblick**.
+**Design Support:** Use frontend-design skill for UI/UX, component structure, and visual direction in the frontend work.
 
 ---
 
-## Målgrupp
+## Product Idea
 
-Primär målgrupp:
+PennyPlan is a simple and modern budgeting application for individuals who want to:
 
-* privatpersoner som idag använder Excel, anteckningar eller ingen budget alls
-* användare som vill ha bättre koll på vardagsekonomi utan att använda komplicerade ekonomisystem
+* register income and expenses
+* track their monthly budget per category
+* see how much money remains to spend
+* set savings goals and follow their progress
 
-Sekundär målgrupp:
-
-* personer som vill börja spara mer strukturerat
-* unga vuxna och familjer som vill få bättre kontroll över månadens utgifter
-
----
-
-## Problem som appen löser
-
-Många har svårt att:
-
-* få en snabb överblick över sin ekonomi
-* förstå vart pengarna faktiskt tar vägen
-* hålla sig inom budget i vardagen
-* följa upp sparmål på ett motiverande sätt
-
-Appen ska därför göra det enkelt att:
-
-* se total ekonomi på en sida
-* förstå utgifter per kategori
-* agera tidigt innan budgeten spricker
-* koppla vardagsekonomi till tydliga mål
+The first version focuses on **simplicity, clarity, and quick financial overview**.
 
 ---
 
-## MVP (version 1)
+## Target Audience
 
-### Funktioner
+### Primary audience
 
-1. **Översikt / Dashboard**
+* individuals currently using Excel, notes, or no budgeting system
+* users who want better control of everyday finances without complicated financial software
 
-   * total inkomst denna månad
-   * totala utgifter denna månad
-   * kvar att spendera
-   * snabb överblick per kategori
-   * status för sparmål
+### Secondary audience
 
-2. **Transaktioner**
+* people who want to start saving more consistently
+* young adults and families who want better insight into monthly spending
 
-   * skapa inkomst eller utgift
-   * ange belopp, datum, kategori och anteckning
-   * lista transaktioner
-   * filtrera på månad
+---
+
+## Problems the App Solves
+
+Many people struggle to:
+
+* get a quick overview of their finances
+* understand where their money actually goes
+* stay within their monthly budget
+* track savings goals in a motivating way
+
+The app should therefore make it easy to:
+
+* see the overall financial situation on one screen
+* understand spending per category
+* react early before the budget is exceeded
+* connect everyday spending with clear savings goals
+
+---
+
+## MVP (Version 1)
+
+### Features
+
+1. **Overview / Dashboard**
+
+Displays:
+
+* total income for the current month
+* total expenses for the current month
+* remaining spendable balance
+* quick overview per category
+* savings goal status
+
+2. **Transactions**
+
+Users can:
+
+* create income or expense entries
+* define amount, date, category, and note
+* view a transaction list
+* filter transactions by month
 
 3. **Budget**
 
-   * sätt månadsbudget per kategori
-   * jämför faktisk spend mot budget
-   * visa varningar när användaren närmar sig eller överskrider budget
+Users can:
 
-4. **Sparmål**
+* set monthly budgets per category
+* compare actual spending vs budget
+* receive warnings when approaching or exceeding budget
 
-   * skapa mål, till exempel buffert, resa eller ny bil
-   * ange målbelopp
-   * visa hur långt användaren kommit
+4. **Savings Goals**
 
-5. **Inställningar**
+Users can:
 
-   * valuta
-   * startdag för månad vid behov
-   * grundläggande profilinställningar
+* create savings goals (for example emergency fund, trip, or new car)
+* define a target amount
+* track progress toward the goal
 
----
+5. **Settings**
 
-## Ej i MVP
+Includes:
 
-Funktioner som kan vänta till senare versioner:
-
-* bankkoppling via Open Banking
-* automatisk kategorisering
-* kvittoskanning
-* delad hushållsbudget
-* export till PDF/Excel
-* pushnotiser
-* AI-baserade rekommendationer
-* återkommande transaktioner
+* currency
+* optional custom start day of the month
+* basic user profile settings
 
 ---
 
-## Förslag på sidor
+## Not Included in MVP
+
+The following features are intentionally postponed:
+
+* bank integrations via Open Banking
+* automatic transaction categorization
+* receipt scanning
+* shared household budgets
+* export to PDF or Excel
+* push notifications
+* AI‑based financial insights
+* recurring transactions
+
+---
+
+## Proposed Pages
 
 * **Dashboard**
-* **Transaktioner**
+* **Transactions**
 * **Budget**
-* **Sparmål**
-* **Inställningar**
+* **Savings Goals**
+* **Settings**
 
 ---
 
-## Datamodell
+## Data Model
 
 ### User
 
@@ -132,7 +143,7 @@ Funktioner som kan vänta till senare versioner:
 
 * id
 * name
-* type (`income` eller `expense`)
+* type (`income` or `expense`)
 * icon
 * color
 
@@ -141,7 +152,7 @@ Funktioner som kan vänta till senare versioner:
 * id
 * userId
 * categoryId
-* type (`income` eller `expense`)
+* type (`income` or `expense`)
 * amount
 * date
 * note
@@ -167,170 +178,205 @@ Funktioner som kan vänta till senare versioner:
 
 ---
 
-## Affärslogik
+## Business Logic
 
-### Beräkningar
+### Calculations
 
-* **Månadens inkomster** = summa av alla income-transaktioner för vald månad
-* **Månadens utgifter** = summa av alla expense-transaktioner för vald månad
-* **Kvar att spendera** = inkomster - utgifter
-* **Budgetstatus per kategori** = budgetlimit - summa utgifter i kategorin
-* **Sparmålsprogress** = currentAmount / targetAmount
+* **Monthly Income** = sum of all income transactions for the selected month
+* **Monthly Expenses** = sum of all expense transactions for the selected month
+* **Remaining Balance** = income − expenses
+* **Budget Status per Category** = budget limit − total expenses in that category
+* **Savings Goal Progress** = currentAmount / targetAmount
 
-### Regler
+### Rules
 
-* belopp måste vara större än 0
-* varje transaktion måste ha datum och kategori
-* kategori måste matcha typ av transaktion
-* en användare ska kunna ha flera budgetposter per månad men bara en per kategori och månad
+* amount must be greater than 0
+* every transaction must include date and category
+* category type must match transaction type
+* a user can have multiple budget entries per month but only one per category per month
 
 ---
 
-## UX-principer
+## UX Principles
 
-* appen ska kännas lätt och snabb
-* viktigaste siffrorna ska synas direkt
-* så få klick som möjligt för att registrera en transaktion
-* färre funktioner men tydligare flöde
-* mobilvänlig design från start
+The application should feel:
 
-Designord:
+* lightweight
+* fast
+* intuitive
+* visually clear
 
-* ren
+Key design goals:
+
+* important numbers visible immediately
+* minimal clicks to register a transaction
+* fewer features but clearer flows
+* mobile‑friendly design from the start
+
+Design keywords:
+
+* clean
 * modern
-* lugn
-* tydlig
-* förtroendeingivande
+* calm
+* clear
+* trustworthy
 
 ---
 
-## Teknikförslag
+## Technology Stack
 
-### Rekommenderad stack
-
-**Frontend**
+### Frontend
 
 * Vue.js
 * HTML
 * CSS
-* JavaScript eller TypeScript beroende på projektets upplägg
-* använd frontend-design skill för att ta fram UI-struktur, layout, komponenttänk och designriktning
+* JavaScript or TypeScript depending on project setup
 
-**Backend / plattform**
+Frontend-design skill should be used to help define:
 
-* Supabase
+* layout
+* UI structure
+* component architecture
+* design direction
 
-  * PostgreSQL databas
-  * Supabase Authentication för användarinloggning (email/password till att börja med)
-  * hantering av användarsessioner och token via Supabase-klient
-  * API via Supabase-klient och policies
-  * möjlighet till realtime och storage längre fram
+---
 
-### Arkitekturidé
+### Backend / Platform
 
-* frontend byggs i Vue.js med fokus på mobilvänligt och enkelt gränssnitt
-* Supabase används som backend för datalagring, autentisering och åtkomst till data
-* affärslogik kan initialt ligga nära frontend där det är rimligt, och flyttas till mer strukturerade lager vid behov
+Supabase will be used as the backend platform.
 
-### Varför denna stack
+Supabase provides:
 
-* snabb att komma igång med för MVP
-* mindre backend-overhead i början
-* PostgreSQL i grunden ger stabil datamodell
-* Supabase ger auth och databas i samma plattform
-* Vue.js passar bra för ett rent och lättnavigerat gränssnitt
+* PostgreSQL database
+* Supabase Authentication for user login (email/password initially)
+* session and token management via the Supabase client
+* built‑in API access
+* Row Level Security for protecting user data
 
-## API-idéer
+---
+
+## Architecture Idea
+
+* the frontend is built with Vue.js focusing on a clean and mobile‑friendly interface
+* Supabase handles authentication, database access, and data storage
+* business logic can initially live close to the frontend and later be moved to structured services if needed
+
+---
+
+## Why This Stack
+
+* very fast to build an MVP
+* minimal backend maintenance early on
+* PostgreSQL provides a strong and flexible data model
+* Supabase includes authentication and database in a single platform
+* Vue.js works well for clean, responsive UI development
+
+---
+
+## API Ideas
 
 ### Transactions
 
-* `GET /api/transactions?month=2026-03`
-* `POST /api/transactions`
-* `PUT /api/transactions/{id}`
-* `DELETE /api/transactions/{id}`
+`GET /api/transactions?month=2026-03`
+
+`POST /api/transactions`
+
+`PUT /api/transactions/{id}`
+
+`DELETE /api/transactions/{id}`
+
+---
 
 ### Budgets
 
-* `GET /api/budgets?month=2026-03`
-* `POST /api/budgets`
-* `PUT /api/budgets/{id}`
+`GET /api/budgets?month=2026-03`
+
+`POST /api/budgets`
+
+`PUT /api/budgets/{id}`
+
+---
 
 ### Goals
 
-* `GET /api/goals`
-* `POST /api/goals`
-* `PUT /api/goals/{id}`
+`GET /api/goals`
+
+`POST /api/goals`
+
+`PUT /api/goals/{id}`
+
+---
 
 ### Dashboard
 
-* `GET /api/dashboard?month=2026-03`
+`GET /api/dashboard?month=2026-03`
 
 ---
 
-## Prioriterad roadmap
+## Prioritized Roadmap
 
-### Fas 1
+### Phase 1
 
-* grundläggande UI
-* skapa och visa transaktioner
-* kategorier
+* basic UI
+* create and display transactions
+* categories
 * dashboard
 
-### Fas 2
+### Phase 2
 
-* budget per kategori
-* visualisering av budgetstatus
-* sparmål
+* budget per category
+* visualization of budget status
+* savings goals
 
-### Fas 3
+### Phase 3
 
-* förbättrad analys
-* återkommande transaktioner
-* export
+* improved financial analysis
+* recurring transactions
+* export features
 
-### Fas 4
+### Phase 4
 
-* bankintegration
-* smarta rekommendationer
-* delad hushållsbudget
-
----
-
-## Namnförslag
-
-Här är några möjliga namn för appen:
-
-* **PennyPlan**
-* **Budgetly**
-* **Kollkassan**
-* **Spendwise**
-* **Månadskollen**
-* **Sparspår**
-* **CashNest**
-* **Översikt**
-
-### Rekommendation
-
-**PennyPlan** är ett bra arbetsnamn eftersom det:
-
-* är lätt att komma ihåg
-* signalerar ekonomi + planering
-* fungerar internationellt
-* passar både MVP och framtida premiumkänsla
+* bank integrations
+* smart financial recommendations
+* shared household budgets
 
 ---
 
-## Nästa steg
+## Name Suggestions
 
-1. Bestäm slutligt namn
-2. Använd frontend-design skill för att ta fram layout, designriktning och komponentstruktur
-3. Sätt upp Vue-projektet med HTML och CSS-struktur
-4. Sätt upp Supabase-projekt med tabeller, Supabase Authentication (users), och row level security policies
-5. Bygg dashboard och transaktionsflöde först
-6. Lägg till budget och sparmål efter att grundflödet fungerar
+Possible names for the application:
+
+* PennyPlan
+* Budgetly
+* Kollkassan
+* Spendwise
+* Månadskollen
+* Sparspår
+* CashNest
+* Översikt
+
+### Recommendation
+
+**PennyPlan** is a strong working name because it:
+
+* is easy to remember
+* communicates finance and planning
+* works internationally
+* fits both MVP and future premium product direction
 
 ---
 
-## Kort vision
+## Next Steps
 
-> En budgetapp som gör privatekonomi enkel, tydlig och motiverande — utan att användaren behöver känna att de jobbar i ett ekonomisystem.
+1. Decide on the final product name
+2. Use frontend-design skill to design layout and UI structure
+3. Set up the Vue project with HTML and CSS structure
+4. Create the Supabase project with tables, authentication, and policies
+5. Build the dashboard and transaction flow first
+6. Add budgeting and savings goals once the core flow works
+
+---
+
+## Vision
+
+> A budgeting app that makes personal finance simple, clear, and motivating — without making users feel like they are using complex financial software.
