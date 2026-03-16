@@ -4,5 +4,7 @@ services:
       context: https://github.com/billypetersson/pennyplan.git
     ports:
       - "5173:5173"
-    env_file:
-      - .env
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      
