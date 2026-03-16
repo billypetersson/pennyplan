@@ -7,7 +7,7 @@
 **Goal:** Help users gain simple and clear control over income, expenses, monthly budgets, and savings goals without the application feeling heavy or complicated.
 
 **Design Support:** Use frontend-design skill for UI/UX, component structure, and visual direction in the frontend work.
-
+**Language:** App language in Swedish, currency is SEK
 ---
 
 ## Product Idea
