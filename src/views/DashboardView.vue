@@ -11,11 +11,14 @@ import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useFixedCostsStore } from '@/stores/fixedCosts'
+import { useCategoriesStore } from '@/stores/categories'
+import { exportMonthPdf } from '@/utils/exportPdf'
 
 const router = useRouter()
 const transactionsStore = useTransactionsStore()
 const authStore = useAuthStore()
 const fixedCostsStore = useFixedCostsStore()
+const categoriesStore = useCategoriesStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
 
 const showForm = ref(false)
@@ -57,6 +60,16 @@ function handleScanned(data) {
   prefill.value = data
   showScanner.value = false
   showForm.value = true
+}
+
+function exportPdf() {
+  exportMonthPdf({
+    month: selectedMonth.value,
+    transactions: transactionsStore.transactions,
+    fixedCosts: fixedCostsStore.costs,
+    fixedCostsTotal: fixedCostsStore.totalMonthly,
+    categories: categoriesStore.categories,
+  })
 }
 </script>
 
@@ -142,10 +155,62 @@ function handleScanned(data) {
         @cancel="showForm = false; prefill = {}"
       />
     </Transition>
+
+    <!-- PDF export FAB -->
+    <button class="pdf-fab" @click="exportPdf" title="Exportera som PDF" aria-label="Exportera som PDF">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+      PDF
+    </button>
   </AppLayout>
 </template>
 
 <style scoped>
+.pdf-fab {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 1rem);
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.625rem 1rem;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+  z-index: 40;
+}
+
+.pdf-fab svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pdf-fab:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.pdf-fab:active {
+  transform: scale(0.96);
+}
+
+@media (min-width: 768px) {
+  .pdf-fab {
+    bottom: 1.5rem;
+    right: 2rem;
+  }
+}
+
 .action-btn-container {
   display: flex;
   flex-direction: row;
