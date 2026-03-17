@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -68,14 +69,6 @@ const navItems = [
       <rect x="2" y="5" width="20" height="14" rx="2"/>
       <line x1="2" y1="10" x2="22" y2="10"/>
     </svg>`
-  },
-  {
-    label: 'Inställningar',
-    path: '/installningar',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>`
   }
 ]
 
@@ -107,12 +100,25 @@ function isActive(path) {
       <span class="nav-label">{{ item.label }}</span>
     </RouterLink>
 
+    <!-- Theme toggle (mobile bottom bar only) -->
+    <div class="nav-theme-mobile">
+      <ThemeToggle />
+    </div>
+
     <!-- Profile + logout (desktop sidebar only) -->
     <div class="nav-profile">
       <div class="nav-profile__avatar" :style="{ backgroundColor: avatarColor }">
         {{ initials }}
       </div>
       <span class="nav-profile__email">{{ authStore.user?.email }}</span>
+      <ThemeToggle />
+      <RouterLink to="/installningar" class="nav-profile__logout" aria-label="Inställningar" title="Inställningar">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </RouterLink>
       <button class="nav-profile__logout" @click="handleSignOut" aria-label="Logga ut" title="Logga ut">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -128,6 +134,8 @@ function isActive(path) {
 <style scoped>
 /* ── Mobile: bottom bar ── */
 .app-nav {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -200,6 +208,14 @@ function isActive(path) {
   font-weight: 500;
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+.nav-theme-mobile {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px 10px;
 }
 
 .nav-profile {
@@ -294,6 +310,10 @@ function isActive(path) {
   .nav-icon :deep(svg) {
     width: 20px;
     height: 20px;
+  }
+
+  .nav-theme-mobile {
+    display: none;
   }
 
   .nav-profile {

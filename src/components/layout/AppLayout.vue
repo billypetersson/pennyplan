@@ -15,8 +15,13 @@ defineProps({
 
     <div class="app-content">
       <header class="app-header">
-        <h1 v-if="title" class="app-header__title">{{ title }}</h1>
-        <slot name="header-right" />
+        <div class="app-header__inner">
+          <div class="app-header__left">
+            <h1 v-if="title" class="app-header__title">{{ title }}</h1>
+            <slot name="header-extra" />
+          </div>
+          <slot name="header-right" />
+        </div>
       </header>
 
       <main class="app-main">
@@ -47,11 +52,22 @@ defineProps({
   height: var(--header-height);
   background-color: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
+  padding: 0 1rem;
+}
+
+.app-header__inner {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
   gap: 1rem;
+}
+
+.app-header__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
 }
 
 .app-header__title {
@@ -82,6 +98,12 @@ defineProps({
   }
 
   .app-header {
+    padding: 0;
+  }
+
+  .app-header__inner {
+    max-width: 960px;
+    width: 100%;
     padding: 0 2rem;
   }
 

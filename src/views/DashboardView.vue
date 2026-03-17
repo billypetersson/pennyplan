@@ -1,11 +1,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import MonthSelector from '@/components/shared/MonthSelector.vue'
 import SummaryCards from '@/components/dashboard/SummaryCards.vue'
 import CategoryOverview from '@/components/dashboard/CategoryOverview.vue'
+import RangeSelector from '@/components/dashboard/RangeSelector.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import SavingsGoalWidget from '@/components/dashboard/SavingsGoalWidget.vue'
@@ -22,27 +21,45 @@ const authStore = useAuthStore()
 const fixedCostsStore = useFixedCostsStore()
 const categoriesStore = useCategoriesStore()
 const savingsStore = useSavingsStore()
-const { selectedMonth } = storeToRefs(transactionsStore)
 
 const showForm = ref(false)
 const showScanner = ref(false)
 const prefill = ref({})
+const selectedRange = ref('30')
 
-const income = computed(() => transactionsStore.monthlyIncome)
-const expenses = computed(() => transactionsStore.monthlyExpenses)
-const balance = computed(() => transactionsStore.remainingBalance)
-const expensesByCategory = computed(() => transactionsStore.expensesByCategory)
-const hasTransactions = computed(() => transactionsStore.transactionsByMonth.length > 0)
+const filteredTransactions = computed(() => {
+  const days = Number(selectedRange.value)
+  const cutoff = new Date()
+  cutoff.setHours(0, 0, 0, 0)
+  cutoff.setDate(cutoff.getDate() - (days - 1))
+  return transactionsStore.transactions.filter(t => new Date(t.date) >= cutoff)
+})
+
+const income = computed(() =>
+  filteredTransactions.value.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
+)
+const expenses = computed(() =>
+  filteredTransactions.value.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
+)
+const balance = computed(() => income.value - expenses.value)
+
+const expensesByCategory = computed(() => {
+  const map = {}
+  filteredTransactions.value.filter(t => t.type === 'expense').forEach(t => {
+    map[t.category_id] = (map[t.category_id] ?? 0) + Number(t.amount)
+  })
+  return Object.entries(map)
+    .map(([category_id, amount]) => ({ category_id, amount }))
+    .sort((a, b) => b.amount - a.amount)
+})
+
+const hasTransactions = computed(() => filteredTransactions.value.length > 0)
 
 onMounted(() => {
   transactionsStore.fetchTransactions()
   fixedCostsStore.fetchCosts()
   savingsStore.fetchGoals()
 })
-
-function onMonthChange(month) {
-  transactionsStore.setMonth(month)
-}
 
 async function handleSignOut() {
   await authStore.signOut()
@@ -68,8 +85,8 @@ function handleScanned(data) {
 
 function exportPdf() {
   exportMonthPdf({
-    month: selectedMonth.value,
-    transactions: transactionsStore.transactions,
+    month: new Date().toISOString().slice(0, 7),
+    transactions: filteredTransactions.value,
     fixedCosts: fixedCostsStore.costs,
     fixedCostsTotal: fixedCostsStore.totalMonthly,
     categories: categoriesStore.categories,
@@ -79,6 +96,12 @@ function exportPdf() {
 
 <template>
   <AppLayout title="Översikt">
+    <template #header-right>
+      <div class="header-actions">
+        <RangeSelector v-model="selectedRange" />
+        <button class="header-btn" @click="exportPdf">Exportera</button>
+      </div>
+    </template>
 
     <!-- Action buttons -->
     <div class="action-btn-container">
@@ -105,11 +128,7 @@ function exportPdf() {
       </button>
     </div>
 
-    <!-- Month selector -->
-    <MonthSelector
-      :model-value="selectedMonth"
-      @update:model-value="onMonthChange"
-    />
+
 
     <!-- Summary cards -->
     <SummaryCards
@@ -124,7 +143,7 @@ function exportPdf() {
       <div class="card">
         <CategoryOverview
           :expenses-by-category="expensesByCategory"
-          :transactions="transactionsStore.transactionsByMonth"
+          :transactions="filteredTransactions"
           :fixed-costs="fixedCostsStore.costs"
           :fixed-costs-total="fixedCostsStore.totalMonthly"
         />
@@ -160,59 +179,33 @@ function exportPdf() {
       />
     </Transition>
 
-    <!-- PDF export FAB -->
-    <button class="pdf-fab" @click="exportPdf" title="Exportera som PDF" aria-label="Exportera som PDF">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        aria-hidden="true">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="12" y1="18" x2="12" y2="12"/>
-        <line x1="9" y1="15" x2="15" y2="15"/>
-      </svg>
-      PDF
-    </button>
   </AppLayout>
 </template>
 
 <style scoped>
-.pdf-fab {
-  position: fixed;
-  bottom: calc(var(--nav-height) + 1rem);
-  right: 1rem;
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.625rem 1rem;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border-radius: 999px;
+  gap: 0.5rem;
+}
+
+.header-btn {
+  padding: 0.3rem 0.75rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-md);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-card);
   cursor: pointer;
-  transition: background-color 0.15s, transform 0.1s;
-  z-index: 40;
+  transition: border-color 0.15s;
+  white-space: nowrap;
 }
 
-.pdf-fab svg {
-  width: 16px;
-  height: 16px;
-}
-
-.pdf-fab:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.pdf-fab:active {
-  transform: scale(0.96);
-}
-
-@media (min-width: 768px) {
-  .pdf-fab {
-    bottom: 1.5rem;
-    right: 2rem;
-  }
+.header-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .action-btn-container {

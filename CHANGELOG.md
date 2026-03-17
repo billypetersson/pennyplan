@@ -4,6 +4,28 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [0.8.0] - 2026-03-17
+
+### Lagt till
+- Mörkt läge med sol/måne-toggle
+- Sparar vald inställning i localStorage, respekterar systemets preferens som standard
+- Toggle synlig i sidomenyn (desktop) och i bottennavigationen (mobil)
+
+---
+
+## [0.7.0] - 2026-03-17
+
+### Lagt till
+- Snabbfilter på Översikt: 1 dag, 1 vecka, 14 dagar, 30 dagar (ersätter månadsväljaren)
+- Summakort och kategoriöversikt uppdateras dynamiskt baserat på valt intervall
+
+### Ändrat
+- Månadsväljaren på Översikt borttagen till förmån för relativa tidsintervall
+- Inställningar borttaget från navigationsmenyn, nu åtkomligt via kugghjulet i sidomenyn (desktop)
+- Profilsektion med initialer, e-post och utloggning tillagd längst ned i sidomenyn
+
+---
+
 ## [0.6.0] - 2026-03-17
 
 ### Lagt till
