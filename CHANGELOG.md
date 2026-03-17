@@ -4,6 +4,16 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [0.5.0] - 2026-03-17
+
+### Lagt till
+- **PDF-export** per månad via knapp i Översikt-headern
+- Exporterad PDF innehåller: summakort (inkomster/utgifter/saldo), utgifter per kategori, fasta kostnader och transaktionslista
+- Transaktioner färgkodas i PDF (grönt för inkomst, rött för utgift)
+- Filnamnet baseras på månadens namn, t.ex. `pennyplan_mars_2026.pdf`
+
+---
+
 ## [0.4.0] - 2026-03-17
 
 ### Lagt till
