@@ -34,6 +34,23 @@
 }
 
 /* ===========================
+   Dark Mode
+   =========================== */
+[data-theme="dark"] {
+  --color-bg: #0F1117;
+  --color-card: #1A1D27;
+  --color-text: #E8EAED;
+  --color-text-muted: #9AA0AC;
+  --color-border: #2A2D3E;
+  --color-danger-light: #2D1515;
+  --color-success-light: #0D2418;
+  --color-warning-light: #2D2208;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ===========================
    CSS Reset
    =========================== */
 *,

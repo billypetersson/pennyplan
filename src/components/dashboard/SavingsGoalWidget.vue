@@ -172,8 +172,8 @@ const remaining = computed(() => {
   text-align: center;
   gap: 0.5rem;
   padding: 1.5rem 1rem;
-  border: 1.5px dashed #c5c8cd;
-  background-color: #e8eaed;
+  border: 1.5px dashed var(--color-border);
+  background-color: var(--color-bg);
   box-shadow: none;
 }
 
