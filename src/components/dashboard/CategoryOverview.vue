@@ -1,29 +1,53 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
-import { formatCurrency } from '@/utils/format'
+import { formatCurrency, formatDateShort } from '@/utils/format'
 
 const props = defineProps({
   expensesByCategory: {
     type: Array,
     required: true
-    // [{ category_id, amount }]
+  },
+  transactions: {
+    type: Array,
+    default: () => []
+  },
+  fixedCosts: {
+    type: Array,
+    default: () => []
+  },
+  fixedCostsTotal: {
+    type: Number,
+    default: 0
   }
 })
 
 const categoriesStore = useCategoriesStore()
+const expanded = ref(new Set())
+
+const CYCLE_LABELS = { monthly: 'mån', quarterly: 'kvartal', yearly: 'år' }
 
 const rows = computed(() => {
-  const max = props.expensesByCategory[0]?.amount ?? 1
-  return props.expensesByCategory.map((item) => {
-    const category = categoriesStore.getCategoryById(item.category_id)
-    return {
-      ...item,
-      category,
-      percentage: Math.round((item.amount / max) * 100)
+  const all = [...props.expensesByCategory]
+  if (props.fixedCostsTotal > 0) {
+    all.push({ category_id: '__fixed__', amount: props.fixedCostsTotal })
+  }
+  const max = all.reduce((m, r) => Math.max(m, r.amount), 1)
+  return all.map((item) => {
+    if (item.category_id === '__fixed__') {
+      return { ...item, isFixed: true, percentage: Math.round((item.amount / max) * 100) }
     }
+    const category = categoriesStore.getCategoryById(item.category_id)
+    const items = props.transactions.filter(t => t.type === 'expense' && t.category_id === item.category_id)
+    return { ...item, category, isFixed: false, items, percentage: Math.round((item.amount / max) * 100) }
   })
 })
+
+function toggle(id) {
+  const s = new Set(expanded.value)
+  s.has(id) ? s.delete(id) : s.add(id)
+  expanded.value = s
+}
 </script>
 
 <template>
@@ -32,13 +56,17 @@ const rows = computed(() => {
       v-for="row in rows"
       :key="row.category_id"
       class="category-row"
+      @click="toggle(row.category_id)"
     >
       <div class="category-row__header">
         <div class="category-row__left">
           <span class="category-row__icon" aria-hidden="true">
-            {{ row.category?.icon ?? '📦' }}
+            {{ row.isFixed ? '📋' : (row.category?.icon ?? '📦') }}
           </span>
-          <span class="category-row__name">{{ row.category?.name ?? row.category_id }}</span>
+          <span class="category-row__name">
+            {{ row.isFixed ? 'Fasta kostnader' : (row.category?.name ?? row.category_id) }}
+          </span>
+          <span class="expand-icon">{{ expanded.has(row.category_id) ? '▲' : '▼' }}</span>
         </div>
         <span class="category-row__amount">{{ formatCurrency(row.amount) }}</span>
       </div>
@@ -48,13 +76,33 @@ const rows = computed(() => {
           class="progress-bar-fill"
           :style="{
             width: row.percentage + '%',
-            backgroundColor: row.category?.color ?? 'var(--color-primary)'
+            backgroundColor: row.isFixed ? 'var(--color-warning)' : (row.category?.color ?? 'var(--color-primary)')
           }"
           role="progressbar"
           :aria-valuenow="row.percentage"
           aria-valuemin="0"
           aria-valuemax="100"
         />
+      </div>
+
+      <!-- Expanded list -->
+      <div v-if="expanded.has(row.category_id)" class="fixed-list">
+        <!-- Fixed costs -->
+        <template v-if="row.isFixed">
+          <div v-for="cost in fixedCosts" :key="cost.id" class="fixed-list__item">
+            <span class="fixed-list__name">{{ cost.name }}</span>
+            <span class="fixed-list__amount">
+              {{ formatCurrency(cost.amount) }}<span class="fixed-list__cycle"> / {{ CYCLE_LABELS[cost.billing_cycle] }}</span>
+            </span>
+          </div>
+        </template>
+        <!-- Regular transactions -->
+        <template v-else>
+          <div v-for="t in row.items" :key="t.id" class="fixed-list__item">
+            <span class="fixed-list__name">{{ t.note || formatDateShort(t.date) }}</span>
+            <span class="fixed-list__amount">{{ formatCurrency(t.amount) }}</span>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -77,6 +125,7 @@ const rows = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
+  cursor: pointer;
 }
 
 .category-row__header {
@@ -108,11 +157,51 @@ const rows = computed(() => {
   text-overflow: ellipsis;
 }
 
+.expand-icon {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
 .category-row__amount {
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.fixed-list {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.625rem 0.75rem;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.fixed-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fixed-list__name {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.fixed-list__amount {
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fixed-list__cycle {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 </style>

@@ -10,10 +10,12 @@ import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
+import { useFixedCostsStore } from '@/stores/fixedCosts'
 
 const router = useRouter()
 const transactionsStore = useTransactionsStore()
 const authStore = useAuthStore()
+const fixedCostsStore = useFixedCostsStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
 
 const showForm = ref(false)
@@ -28,6 +30,7 @@ const hasTransactions = computed(() => transactionsStore.transactionsByMonth.len
 
 onMounted(() => {
   transactionsStore.fetchTransactions()
+  fixedCostsStore.fetchCosts()
 })
 
 function onMonthChange(month) {
@@ -105,7 +108,12 @@ function handleScanned(data) {
     <section>
       <h2 class="section-heading">Utgifter per kategori</h2>
       <div class="card">
-        <CategoryOverview :expenses-by-category="expensesByCategory" />
+        <CategoryOverview
+          :expenses-by-category="expensesByCategory"
+          :transactions="transactionsStore.transactionsByMonth"
+          :fixed-costs="fixedCostsStore.costs"
+          :fixed-costs-total="fixedCostsStore.totalMonthly"
+        />
       </div>
     </section>
 
