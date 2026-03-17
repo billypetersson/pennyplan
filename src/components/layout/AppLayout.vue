@@ -14,8 +14,8 @@ defineProps({
     <BottomNav />
 
     <div class="app-content">
-      <header v-if="title" class="app-header">
-        <h1 class="app-header__title">{{ title }}</h1>
+      <header class="app-header">
+        <h1 v-if="title" class="app-header__title">{{ title }}</h1>
         <slot name="header-right" />
       </header>
 
@@ -55,10 +55,11 @@ defineProps({
 }
 
 .app-header__title {
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-text);
-  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .app-main {

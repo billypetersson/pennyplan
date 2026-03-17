@@ -8,10 +8,12 @@ import SummaryCards from '@/components/dashboard/SummaryCards.vue'
 import CategoryOverview from '@/components/dashboard/CategoryOverview.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
+import SavingsGoalWidget from '@/components/dashboard/SavingsGoalWidget.vue'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useFixedCostsStore } from '@/stores/fixedCosts'
 import { useCategoriesStore } from '@/stores/categories'
+import { useSavingsStore } from '@/stores/savings'
 import { exportMonthPdf } from '@/utils/exportPdf'
 
 const router = useRouter()
@@ -19,6 +21,7 @@ const transactionsStore = useTransactionsStore()
 const authStore = useAuthStore()
 const fixedCostsStore = useFixedCostsStore()
 const categoriesStore = useCategoriesStore()
+const savingsStore = useSavingsStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
 
 const showForm = ref(false)
@@ -34,6 +37,7 @@ const hasTransactions = computed(() => transactionsStore.transactionsByMonth.len
 onMounted(() => {
   transactionsStore.fetchTransactions()
   fixedCostsStore.fetchCosts()
+  savingsStore.fetchGoals()
 })
 
 function onMonthChange(month) {
@@ -74,10 +78,7 @@ function exportPdf() {
 </script>
 
 <template>
-  <AppLayout title="PennyPlan">
-    <template #header-right>
-      <button class="btn btn-ghost btn-sm" @click="handleSignOut">Logga ut</button>
-    </template>
+  <AppLayout title="Översikt">
 
     <!-- Action buttons -->
     <div class="action-btn-container">
@@ -119,7 +120,7 @@ function exportPdf() {
 
     <!-- Category breakdown -->
     <section>
-      <h2 class="section-heading">Utgifter per kategori</h2>
+      <h2 class="section-heading">Utgifter</h2>
       <div class="card">
         <CategoryOverview
           :expenses-by-category="expensesByCategory"
@@ -129,6 +130,9 @@ function exportPdf() {
         />
       </div>
     </section>
+
+    <!-- Savings goals -->
+    <SavingsGoalWidget :goals="savingsStore.goals" />
 
     <!-- Empty state for the whole month -->
     <div v-if="!hasTransactions" class="empty-state dashboard-empty">

@@ -4,6 +4,14 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [0.6.0] - 2026-03-17
+
+### Lagt till
+- Sparmål-widget på Översikt-sidan med progressbar, belopp, procent och dagar kvar
+- Om flera sparmål finns visas pill-knappar för att välja vilket mål som visas
+
+---
+
 ## [0.5.0] - 2026-03-17
 
 ### Lagt till
