@@ -3,16 +3,23 @@ import { ref, computed, watch } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { todayISO } from '@/utils/format'
 
+const props = defineProps({
+  prefill: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
 const emit = defineEmits(['submit', 'cancel'])
 
 const categoriesStore = useCategoriesStore()
 
 // Form state
 const type = ref('expense')
-const amount = ref('')
+const amount = ref(props.prefill.amount ?? '')
 const categoryId = ref('')
-const date = ref(todayISO())
-const note = ref('')
+const date = ref(props.prefill.date ?? todayISO())
+const note = ref(props.prefill.note ?? '')
 const errors = ref({})
 
 // Categories filtered by selected type
