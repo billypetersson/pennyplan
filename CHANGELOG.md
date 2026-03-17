@@ -4,6 +4,28 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [0.4.0] - 2026-03-17
+
+### Lagt till
+- Ny sida **Fasta kostnader** (`/fasta-kostnader`) för återkommande utgifter som försäkringar, prenumerationer och hyra
+- Fasta kostnader-formulär med fält för namn, belopp, kategori (6 typer), faktureringsintervall (månadsvis/kvartalsvis/årsvis) och valfri förfallodag
+- Pinia-store för fasta kostnader med CRUD mot Supabase (`fixed_costs`-tabell)
+- Summakort på Fasta kostnader-sidan som visar total per månad och per år
+- Tabellvy för fasta kostnader med en rad per post
+- Sortering på alla kolumner (namn, kategori, belopp, intervall, förfallodag)
+- Zebra-randig tabell (varannan rad mörkare)
+- Fasta kostnader visas som en egen rad i **Utgifter per kategori** på Översikt
+- Alla kategorirader i Utgifter per kategori är nu klickbara och expanderar för att visa enskilda poster
+- Knapparna **Lägg till transaktion** och **Skanna kvitto** tillagda längst upp på Översikt-sidan
+- Nav-länk **Fasta** tillagd i bottom navigation
+- Mindee API för OCR scanning
+
+### Ändrat
+- Kategoriöversikten på Översikt stödjer nu flera expanderade rader samtidigt
+- Transaktioner i expanderad kategorivy visar notering eller datum som etikett
+
+---
+
 ## [0.2.0] - 2026-03-16
 
 ### Lagt till
