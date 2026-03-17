@@ -1,7 +1,29 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+
+const initials = computed(() => {
+  const email = authStore.user?.email ?? ''
+  return email.slice(0, 2).toUpperCase()
+})
+
+const avatarColor = computed(() => {
+  const email = authStore.user?.email ?? ''
+  const colors = ['#4F9B8F', '#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#EF4444']
+  let hash = 0
+  for (let i = 0; i < email.length; i++) hash = email.charCodeAt(i) + ((hash << 5) - hash)
+  return colors[Math.abs(hash) % colors.length]
+})
+
+async function handleSignOut() {
+  await authStore.signOut()
+  router.push('/login')
+}
 
 const navItems = [
   {
@@ -84,6 +106,22 @@ function isActive(path) {
       <span class="nav-icon" v-html="item.icon" aria-hidden="true" />
       <span class="nav-label">{{ item.label }}</span>
     </RouterLink>
+
+    <!-- Profile + logout (desktop sidebar only) -->
+    <div class="nav-profile">
+      <div class="nav-profile__avatar" :style="{ backgroundColor: avatarColor }">
+        {{ initials }}
+      </div>
+      <span class="nav-profile__email">{{ authStore.user?.email }}</span>
+      <button class="nav-profile__logout" @click="handleSignOut" aria-label="Logga ut" title="Logga ut">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
   </nav>
 </template>
 
@@ -164,6 +202,10 @@ function isActive(path) {
   white-space: nowrap;
 }
 
+.nav-profile {
+  display: none;
+}
+
 /* ── Desktop: left sidebar ── */
 @media (min-width: 768px) {
   .app-nav {
@@ -177,7 +219,7 @@ function isActive(path) {
     border-top: none;
     border-right: 1px solid var(--color-border);
     box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
-    padding: 1.5rem 0 2rem;
+    padding: 1.5rem 0 0;
     overflow-y: auto;
     gap: 2px;
   }
@@ -252,6 +294,61 @@ function isActive(path) {
   .nav-icon :deep(svg) {
     width: 20px;
     height: 20px;
+  }
+
+  .nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-top: auto;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .nav-profile__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .nav-profile__email {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav-profile__logout {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .nav-profile__logout svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .nav-profile__logout:hover {
+    background-color: var(--color-danger-light);
+    color: var(--color-danger);
   }
 }
 </style>

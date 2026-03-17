@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
-import { formatCurrency, formatDateShort } from '@/utils/format'
+import { formatCurrency } from '@/utils/format'
 
 const props = defineProps({
   transaction: {
@@ -26,18 +26,20 @@ function handleDelete() {
 <template>
   <div class="transaction-item" :class="{ 'transaction-item--confirming': showDeleteConfirm }">
     <div v-if="!showDeleteConfirm" class="transaction-item__main">
-      <!-- Icon -->
-      <div
-        class="transaction-item__icon"
-        :style="{ backgroundColor: (category?.color ?? '#6B7280') + '20' }"
-        aria-hidden="true"
-      >
-        <span>{{ category?.icon ?? '📦' }}</span>
+      <!-- Icon with tooltip -->
+      <div class="transaction-item__cat">
+        <div
+          class="transaction-item__icon"
+          :style="{ backgroundColor: (category?.color ?? '#6B7280') + '20' }"
+          :data-tooltip="category?.name ?? transaction.category_id"
+          aria-hidden="true"
+        >
+          <span>{{ category?.icon ?? '📦' }}</span>
+        </div>
       </div>
 
-      <!-- Info -->
+      <!-- Note -->
       <div class="transaction-item__info">
-        <span class="transaction-item__category">{{ category?.name ?? transaction.category_id }}</span>
         <span v-if="transaction.note" class="transaction-item__note">{{ transaction.note }}</span>
       </div>
 
@@ -79,25 +81,17 @@ function handleDelete() {
 
 <style scoped>
 .transaction-item {
-  padding: 0.75rem 0;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--color-border);
   transition: background-color 0.15s;
 }
 
 .transaction-item:last-child {
   border-bottom: none;
-  padding-bottom: 0;
-}
-
-.transaction-item:first-child {
-  padding-top: 0;
 }
 
 .transaction-item--confirming {
   background-color: var(--color-danger-light);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem;
-  margin: 0 -0.75rem;
 }
 
 .transaction-item__main {
@@ -106,15 +100,52 @@ function handleDelete() {
   gap: 0.75rem;
 }
 
+.transaction-item__cat {
+  flex-shrink: 0;
+  position: relative;
+}
+
 .transaction-item__icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.125rem;
-  flex-shrink: 0;
+  font-size: 16px;
+  cursor: default;
+}
+
+.transaction-item__icon span {
+  display: block;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+.transaction-item__icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-text);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+.transaction-item__icon:hover::after {
+  opacity: 1;
 }
 
 .transaction-item__info {
@@ -122,21 +153,12 @@ function handleDelete() {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-}
-
-.transaction-item__category {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--color-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  justify-content: center;
 }
 
 .transaction-item__note {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -144,9 +166,9 @@ function handleDelete() {
 
 .transaction-item__right {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
