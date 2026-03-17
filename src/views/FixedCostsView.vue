@@ -12,7 +12,41 @@ const editCost = ref(null)
 
 onMounted(() => store.fetchCosts())
 
-const costs = computed(() => store.costs)
+const sortKey = ref('name')
+const sortDir = ref('asc')
+
+const CYCLE_ORDER = { monthly: 1, quarterly: 2, yearly: 3 }
+
+const costs = computed(() => {
+  return [...store.costs].sort((a, b) => {
+    let valA, valB
+    if (sortKey.value === 'cycle') {
+      valA = CYCLE_ORDER[a.billing_cycle] ?? 99
+      valB = CYCLE_ORDER[b.billing_cycle] ?? 99
+    } else if (sortKey.value === 'due_day') {
+      valA = a.due_day ?? 999
+      valB = b.due_day ?? 999
+    } else if (sortKey.value === 'amount') {
+      valA = Number(a.amount)
+      valB = Number(b.amount)
+    } else {
+      valA = (a[sortKey.value] ?? '').toString().toLowerCase()
+      valB = (b[sortKey.value] ?? '').toString().toLowerCase()
+    }
+    if (valA < valB) return sortDir.value === 'asc' ? -1 : 1
+    if (valA > valB) return sortDir.value === 'asc' ? 1 : -1
+    return 0
+  })
+})
+
+function sort(key) {
+  if (sortKey.value === key) {
+    sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortDir.value = 'asc'
+  }
+}
 
 const CATEGORY_LABELS = {
   subscription: 'Prenumeration',
@@ -75,38 +109,57 @@ async function handleDelete(id) {
     </div>
 
     <!-- Cost list -->
-    <div v-if="costs.length > 0" class="costs-list">
-      <div v-for="cost in costs" :key="cost.id" class="cost-item card">
-        <div class="cost-item__info">
-          <span class="cost-item__name">{{ cost.name }}</span>
-          <div class="cost-item__meta">
-            <span class="badge">{{ CATEGORY_LABELS[cost.category] ?? cost.category }}</span>
-            <span v-if="cost.due_day" class="cost-item__due">dag {{ cost.due_day }}</span>
-          </div>
-        </div>
-        <div class="cost-item__right">
-          <span class="cost-item__amount">{{ formatCurrency(cost.amount) }}<span class="cost-item__cycle"> / {{ CYCLE_LABELS[cost.billing_cycle] }}</span></span>
-          <div class="cost-item__actions">
-            <button class="action-btn" @click="openEdit(cost)" aria-label="Redigera">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-              </svg>
-            </button>
-            <button class="action-btn action-btn--danger" @click="handleDelete(cost.id)" aria-label="Ta bort">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                <path d="M10 11v6"/>
-                <path d="M14 11v6"/>
-                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
+    <div v-if="costs.length > 0" class="table-wrap card">
+      <table class="costs-table">
+        <thead>
+          <tr>
+            <th class="sortable" @click="sort('name')">
+              Namn <span class="sort-icon">{{ sortKey === 'name' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+            </th>
+            <th class="sortable" @click="sort('category')">
+              Kategori <span class="sort-icon">{{ sortKey === 'category' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+            </th>
+            <th class="col-amount sortable" @click="sort('amount')">
+              Belopp <span class="sort-icon">{{ sortKey === 'amount' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+            </th>
+            <th class="sortable" @click="sort('cycle')">
+              Intervall <span class="sort-icon">{{ sortKey === 'cycle' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+            </th>
+            <th class="col-due sortable" @click="sort('due_day')">
+              Förfaller <span class="sort-icon">{{ sortKey === 'due_day' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+            </th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="cost in costs" :key="cost.id">
+            <td class="col-name">{{ cost.name }}</td>
+            <td><span class="badge">{{ CATEGORY_LABELS[cost.category] ?? cost.category }}</span></td>
+            <td class="col-amount">{{ formatCurrency(cost.amount) }}</td>
+            <td class="col-cycle">{{ CYCLE_LABELS[cost.billing_cycle] }}</td>
+            <td class="col-due">{{ cost.due_day ? `dag ${cost.due_day}` : '—' }}</td>
+            <td class="col-actions">
+              <button class="action-btn" @click="openEdit(cost)" aria-label="Redigera">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="action-btn action-btn--danger" @click="handleDelete(cost.id)" aria-label="Ta bort">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/>
+                  <path d="M14 11v6"/>
+                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Empty state -->
@@ -155,74 +208,100 @@ async function handleDelete(id) {
   color: var(--color-primary);
 }
 
-.costs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.cost-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-}
-
-.cost-item__info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  min-width: 0;
-}
-
-.cost-item__name {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  white-space: nowrap;
+.table-wrap {
+  padding: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.cost-item__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.cost-item__due {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-}
-
-.cost-item__right {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-}
-
-.cost-item__amount {
+.costs-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 0.9375rem;
-  font-weight: 700;
+}
+
+.costs-table thead tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.costs-table th {
+  padding: 0.625rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.costs-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.costs-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.costs-table tbody tr:nth-child(even) {
+  background-color: var(--color-border);
+}
+
+.costs-table tbody tr:hover {
+  background-color: var(--color-border);
+}
+
+.costs-table td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  color: var(--color-text);
+}
+
+.sort-icon {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  margin-left: 0.2rem;
+}
+
+.col-name {
+  font-weight: 600;
+}
+
+.col-due {
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
-.cost-item__cycle {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  color: var(--color-text-muted);
+.col-amount {
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
 }
 
-.cost-item__actions {
-  display: flex;
-  gap: 0.125rem;
+.costs-table th.col-amount {
+  text-align: right;
+}
+
+.col-cycle {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.col-actions {
+  text-align: right;
+  white-space: nowrap;
 }
 
 .action-btn {
   width: 30px;
   height: 30px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -237,7 +316,7 @@ async function handleDelete(id) {
 }
 
 .action-btn:hover {
-  background-color: var(--color-bg);
+  background-color: var(--color-border);
   color: var(--color-text);
 }
 
