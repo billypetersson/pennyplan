@@ -10,6 +10,7 @@ const router = createRouter({
     { path: '/transaktioner', component: () => import('@/views/TransactionsView.vue') },
     { path: '/budget', component: () => import('@/views/BudgetView.vue') },
     { path: '/sparmal', component: () => import('@/views/SavingsView.vue') },
+    { path: '/fasta-kostnader', component: () => import('@/views/FixedCostsView.vue') },
     { path: '/installningar', component: () => import('@/views/SettingsView.vue') },
   ]
 })
