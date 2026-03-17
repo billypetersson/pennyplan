@@ -14,7 +14,7 @@ const props = defineProps({
   balance: {
     type: Number,
     required: true
-  }
+  },
 })
 
 const balanceIsNegative = computed(() => props.balance < 0)
