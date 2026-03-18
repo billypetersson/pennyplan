@@ -110,9 +110,8 @@ function isActive(path) {
       <div class="nav-profile__avatar" :style="{ backgroundColor: avatarColor }">
         {{ initials }}
       </div>
-      <span class="nav-profile__email">{{ authStore.user?.email }}</span>
       <ThemeToggle />
-      <RouterLink to="/installningar" class="nav-profile__logout" aria-label="Inställningar" title="Inställningar">
+      <RouterLink to="/installningar" class="nav-profile__settings" aria-label="Inställningar" title="Inställningar">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
@@ -348,6 +347,7 @@ function isActive(path) {
     white-space: nowrap;
   }
 
+  .nav-profile__settings,
   .nav-profile__logout {
     width: 28px;
     height: 28px;
@@ -361,9 +361,15 @@ function isActive(path) {
     transition: background-color 0.15s, color 0.15s;
   }
 
+  .nav-profile__settings svg,
   .nav-profile__logout svg {
     width: 16px;
     height: 16px;
+  }
+
+  .nav-profile__settings:hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 
   .nav-profile__logout:hover {
