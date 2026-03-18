@@ -10,6 +10,12 @@ const errorMessage = ref('')
 const showWelcome = ref(false)
 
 onMounted(async () => {
+  if (new URLSearchParams(window.location.search).has('preview')) {
+    status.value = 'success'
+    showWelcome.value = true
+    return
+  }
+
   try {
     const { data, error } = await supabase.auth.getSession()
 
