@@ -14,25 +14,52 @@
       </button>
     </div>
 
+    <!-- Reset email sent state -->
+    <div v-else-if="resetSent" class="auth-card confirm-card">
+      <MailCheck class="confirm-icon" :size="48" :stroke-width="1.5" aria-hidden="true" />
+      <h2 class="confirm-title">Kolla din e-post</h2>
+      <p class="confirm-text">
+        Vi har skickat en återställningslänk till <strong>{{ email }}</strong>.
+        Klicka på länken för att välja ett nytt lösenord.
+      </p>
+      <p class="confirm-hint">Inget mail? Kontrollera skräpposten.</p>
+      <button class="btn btn-ghost btn-sm" @click="resetSent = false; mode = 'login'">
+        Tillbaka till inloggning
+      </button>
+    </div>
+
     <div v-else class="auth-card">
       <div class="auth-logo">
         <AppLogo size="lg" />
         <p>Din enkla budgetapp</p>
       </div>
 
-      <div class="auth-tabs">
-        <button :class="{ active: mode === 'login' }" @click="mode = 'login'">Logga in</button>
-        <button :class="{ active: mode === 'register' }" @click="mode = 'register'">Skapa konto</button>
+      <!-- Tabs — hidden in forgot mode -->
+      <div v-if="mode !== 'forgot'" class="auth-tabs">
+        <button :class="{ active: mode === 'login' }" @click="mode = 'login'; error = ''">Logga in</button>
+        <button :class="{ active: mode === 'register' }" @click="mode = 'register'; error = ''">Skapa konto</button>
       </div>
 
-      <form @submit.prevent="submit">
+      <!-- Forgot password heading -->
+      <div v-if="mode === 'forgot'" class="forgot-header">
+        <h2 class="forgot-title">Glömt lösenord?</h2>
+        <p class="forgot-sub">Ange din e-postadress så skickar vi en återställningslänk.</p>
+      </div>
+
+      <form @submit.prevent="submit" novalidate>
         <div class="form-group">
           <label>E-postadress</label>
-          <input v-model="email" type="email" placeholder="din@email.se" required />
+          <input v-model="email" type="email" placeholder="din@email.se" />
         </div>
-        <div class="form-group">
+        <div v-if="mode !== 'forgot'" class="form-group">
           <label>Lösenord</label>
-          <input v-model="password" type="password" placeholder="Minst 8 tecken" required minlength="8" />
+          <input v-model="password" type="password" placeholder="Minst 8 tecken" />
+          <button
+            v-if="mode === 'login'"
+            type="button"
+            class="forgot-link"
+            @click="mode = 'forgot'; error = ''; noAccount = false"
+          >Glömt lösenord?</button>
         </div>
 
         <p v-if="error" class="auth-error">{{ error }}</p>
@@ -40,9 +67,9 @@
         <div v-if="noAccount" class="no-account-callout">
           <div class="no-account-callout__top">
             <UserX :size="18" :stroke-width="1.75" class="no-account-callout__icon" aria-hidden="true" />
-            <span class="no-account-callout__title">Inget konto hittades</span>
+            <span class="no-account-callout__title">Fel e-postadress eller lösenord</span>
           </div>
-          <p class="no-account-callout__text">Vi hittade inget konto kopplat till den e-postadressen. Vill du skapa ett?</p>
+          <p class="no-account-callout__text">Kontrollera dina uppgifter och försök igen. Har du inget konto än?</p>
           <button type="button" class="no-account-callout__btn" @click="mode = 'register'; noAccount = false">
             <UserPlus :size="14" :stroke-width="2" aria-hidden="true" />
             Skapa konto
@@ -50,8 +77,15 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" :disabled="loading">
-          {{ loading ? 'Laddar...' : mode === 'login' ? 'Logga in' : 'Skapa konto' }}
+          {{ loading ? 'Laddar...' : mode === 'login' ? 'Logga in' : mode === 'register' ? 'Skapa konto' : 'Skicka återställningslänk' }}
         </button>
+
+        <button
+          v-if="mode === 'forgot'"
+          type="button"
+          class="back-link"
+          @click="mode = 'login'; error = ''"
+        >← Tillbaka till inloggning</button>
       </form>
     </div>
   </div>
@@ -74,10 +108,31 @@ const error = ref('')
 const noAccount = ref(false)
 const loading = ref(false)
 const registeredEmail = ref('')
+const resetSent = ref(false)
 
 async function submit() {
   error.value = ''
   noAccount.value = false
+
+  if (!email.value) return (error.value = 'Ange din e-postadress.')
+
+  if (mode.value === 'forgot') {
+    loading.value = true
+    try {
+      await authStore.sendPasswordReset(email.value)
+      resetSent.value = true
+    } catch {
+      error.value = 'Något gick fel, försök igen.'
+    } finally {
+      loading.value = false
+    }
+    return
+  }
+
+  if (!password.value) return (error.value = 'Ange ditt lösenord.')
+  if (mode.value === 'register' && password.value.length < 8)
+    return (error.value = 'Lösenordet måste vara minst 8 tecken.')
+
   loading.value = true
   try {
     if (mode.value === 'login') {
@@ -173,6 +228,7 @@ async function submit() {
   font-weight: 500;
   margin-bottom: 0.4rem;
   color: var(--color-text);
+  line-height: 1;
 }
 
 .form-group input {
@@ -246,6 +302,60 @@ async function submit() {
   width: 100%;
   padding: 0.85rem;
   font-size: 1rem;
+}
+
+
+.forgot-link {
+  display: block;
+  margin-top: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  text-align: right;
+}
+
+.forgot-link:hover {
+  color: var(--color-primary);
+}
+
+.forgot-header {
+  margin-bottom: 1.5rem;
+}
+
+.forgot-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.375rem;
+}
+
+.forgot-sub {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.back-link {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: center;
+}
+
+.back-link:hover {
+  color: var(--color-text);
 }
 
 .confirm-card {
