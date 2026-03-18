@@ -26,6 +26,8 @@ export const useAuthStore = defineStore('auth', () => {
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
     user.value = data.user
+    // Returns true if email confirmation is required (session is null)
+    return !data.session
   }
 
   async function signOut() {

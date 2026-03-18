@@ -4,7 +4,7 @@ const isDark = ref(false)
 
 export function initTheme() {
   const saved = localStorage.getItem('theme')
-  isDark.value = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+  isDark.value = saved === 'dark'
   applyTheme(isDark.value)
 }
 
