@@ -6,6 +6,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/login', component: () => import('@/views/LoginView.vue'), meta: { public: true } },
+    { path: '/auth/confirm', component: () => import('@/views/ConfirmView.vue'), meta: { public: true } },
     { path: '/', component: DashboardView },
     { path: '/transaktioner', component: () => import('@/views/TransactionsView.vue') },
     { path: '/budget', component: () => import('@/views/BudgetView.vue') },

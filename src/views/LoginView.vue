@@ -1,6 +1,20 @@
 <template>
   <div class="auth-page">
-    <div class="auth-card">
+    <!-- Email confirmation pending state -->
+    <div v-if="registeredEmail" class="auth-card confirm-card">
+      <MailCheck class="confirm-icon" :size="48" :stroke-width="1.5" aria-hidden="true" />
+      <h2 class="confirm-title">Bekräfta din e-post</h2>
+      <p class="confirm-text">
+        Vi har skickat ett bekräftelsemail till <strong>{{ registeredEmail }}</strong>.
+        Klicka på länken i mailet för att aktivera ditt konto.
+      </p>
+      <p class="confirm-hint">Inget mail? Kontrollera skräpposten.</p>
+      <button class="btn btn-ghost btn-sm" @click="registeredEmail = ''; mode = 'login'">
+        Tillbaka till inloggning
+      </button>
+    </div>
+
+    <div v-else class="auth-card">
       <div class="auth-logo">
         <Coins class="logo-icon" :size="40" :stroke-width="1.5" aria-hidden="true" />
         <h1>PennyPlan</h1>
@@ -19,10 +33,22 @@
         </div>
         <div class="form-group">
           <label>Lösenord</label>
-          <input v-model="password" type="password" placeholder="Minst 6 tecken" required minlength="6" />
+          <input v-model="password" type="password" placeholder="Minst 8 tecken" required minlength="8" />
         </div>
 
         <p v-if="error" class="auth-error">{{ error }}</p>
+
+        <div v-if="noAccount" class="no-account-callout">
+          <div class="no-account-callout__top">
+            <UserX :size="18" :stroke-width="1.75" class="no-account-callout__icon" aria-hidden="true" />
+            <span class="no-account-callout__title">Inget konto hittades</span>
+          </div>
+          <p class="no-account-callout__text">Vi hittade inget konto kopplat till den e-postadressen. Vill du skapa ett?</p>
+          <button type="button" class="no-account-callout__btn" @click="mode = 'register'; noAccount = false">
+            <UserPlus :size="14" :stroke-width="2" aria-hidden="true" />
+            Skapa konto
+          </button>
+        </div>
 
         <button type="submit" class="btn btn-primary btn-full" :disabled="loading">
           {{ loading ? 'Laddar...' : mode === 'login' ? 'Logga in' : 'Skapa konto' }}
@@ -36,7 +62,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Coins } from 'lucide-vue-next'
+import { Coins, MailCheck, UserX, UserPlus } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -45,20 +71,33 @@ const mode = ref('login')
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const noAccount = ref(false)
 const loading = ref(false)
+const registeredEmail = ref('')
 
 async function submit() {
   error.value = ''
+  noAccount.value = false
   loading.value = true
   try {
     if (mode.value === 'login') {
       await authStore.signIn(email.value, password.value)
+      router.push('/')
     } else {
-      await authStore.signUp(email.value, password.value)
+      const needsConfirmation = await authStore.signUp(email.value, password.value)
+      if (needsConfirmation) {
+        registeredEmail.value = email.value
+      } else {
+        router.push('/')
+      }
     }
-    router.push('/')
   } catch (e) {
-    error.value = e.message || 'Något gick fel, försök igen.'
+    const msg = e.message || ''
+    if (mode.value === 'login' && (msg.toLowerCase().includes('invalid login credentials') || msg.toLowerCase().includes('invalid credentials'))) {
+      noAccount.value = true
+    } else {
+      error.value = msg || 'Något gick fel, försök igen.'
+    }
   } finally {
     loading.value = false
   }
@@ -156,9 +195,96 @@ async function submit() {
   margin-bottom: 1rem;
 }
 
+.no-account-callout {
+  background: var(--color-danger-light);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.no-account-callout__top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.no-account-callout__icon {
+  color: var(--color-danger);
+  flex-shrink: 0;
+}
+
+.no-account-callout__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.no-account-callout__text {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.no-account-callout__btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.no-account-callout__btn:hover {
+  opacity: 0.88;
+}
+
 .btn-full {
   width: 100%;
   padding: 0.85rem;
   font-size: 1rem;
+}
+
+.confirm-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 2.5rem 2rem;
+}
+
+.confirm-icon {
+  color: var(--color-primary);
+}
+
+.confirm-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.confirm-text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.confirm-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
 }
 </style>
