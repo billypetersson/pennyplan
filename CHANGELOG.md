@@ -4,6 +4,36 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.3.0] - 2026-03-18
+
+### Lagt till
+- Glömt lösenord-flöde på inloggningssidan med e-postutskick via Supabase
+- Ny sida `/auth/reset-password` där användaren anger nytt lösenord efter att ha klickat på återställningslänken
+- Skelett-laddningsskärm (shimmer) på Översikt medan data hämtas från databasen — ersätter de vilseledande nollvärdena
+- Ny återanvändbar `SkeletonBlock`-komponent med shimmer-animation
+
+### Åtgärdat
+- Felmeddelandet vid fel lösenord visade "Inget konto hittades" — ändrat till "Fel e-postadress eller lösenord"
+- Validering vid tomt formulär visade webbläsarens inbyggda engelska feltext — ersatt med svenska felmeddelanden
+- Återställningslänken hanteras nu korrekt via `PASSWORD_RECOVERY`-händelsen istället för `getSession()` som anropades för tidigt
+
+---
+
+## [1.2.0] - 2026-03-18
+
+### Lagt till
+- `AppLogo`-komponent som används konsekvent på alla ställen där logotypen visas (inloggning, bekräftelse, sidomenyn, inställningar)
+- Coins-ikon i guld bredvid logotyptexten med studsanimation vid hover
+- Subtila hover-animationer på navigationsikoner — varje ikon har en unik animation (puls, glidning, studs, svaj)
+
+### Ändrat
+- Logotypteckensnittet bytt till Google Font **Caveat**
+- Logotypfärg ändrad till `--color-primary-dark` (mörkgrön)
+- Inter används nu som typsnitt i hela appen
+- Teckensnittsrendering ändrad till `subpixel-antialiased` för skarpare text
+
+---
+
 ## [1.1.0] - 2026-03-18
 
 ### Ändrat
