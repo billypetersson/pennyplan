@@ -1,5 +1,6 @@
 <script setup>
 import { formatMonthLabel, prevMonth, nextMonth } from '@/utils/format'
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 
 const props = defineProps({
   modelValue: {
@@ -22,17 +23,11 @@ function goToNext() {
 <template>
   <div class="month-selector">
     <button class="month-btn" @click="goToPrev" aria-label="Föregående månad">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
+      <ChevronLeft :size="16" :stroke-width="2.5" />
     </button>
     <span class="month-label">{{ formatMonthLabel(modelValue) }}</span>
     <button class="month-btn" @click="goToNext" aria-label="Nästa månad">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
+      <ChevronRight :size="16" :stroke-width="2.5" />
     </button>
   </div>
 </template>
@@ -75,10 +70,5 @@ function goToNext() {
   background-color: var(--color-primary);
   color: #ffffff;
   border-color: var(--color-primary);
-}
-
-.month-btn svg {
-  width: 16px;
-  height: 16px;
 }
 </style>

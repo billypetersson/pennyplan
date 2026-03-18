@@ -8,6 +8,8 @@ import { useBudgetStore } from '@/stores/budget'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useCategoriesStore } from '@/stores/categories'
 import { formatCurrency } from '@/utils/format'
+import { BarChart3, ChevronRight } from 'lucide-vue-next'
+import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 
 const budgetStore = useBudgetStore()
 const transactionsStore = useTransactionsStore()
@@ -126,7 +128,7 @@ async function handleDelete(limitId) {
         >
           <div class="budget-row__header">
             <div class="budget-row__left">
-              <span class="budget-row__icon" aria-hidden="true">{{ row.category.icon }}</span>
+              <CategoryIcon :category-id="row.category.id" :size="16" class="budget-row__icon" aria-hidden="true" />
               <span class="budget-row__name">{{ row.category.name }}</span>
             </div>
             <div class="budget-row__right">
@@ -140,7 +142,7 @@ async function handleDelete(limitId) {
               <span v-else class="budget-row__no-budget">
                 {{ formatCurrency(row.spent) }}
               </span>
-              <span class="budget-row__chevron" aria-hidden="true">›</span>
+              <ChevronRight :size="14" :stroke-width="2" class="budget-row__chevron" aria-hidden="true" />
             </div>
           </div>
 
@@ -202,7 +204,7 @@ async function handleDelete(limitId) {
           @keydown.enter="openBudgetForm(cat)"
         >
           <div class="unbudgeted-row__left">
-            <span class="unbudgeted-row__icon" aria-hidden="true">{{ cat.icon }}</span>
+            <CategoryIcon :category-id="cat.id" :size="16" class="unbudgeted-row__icon" aria-hidden="true" />
             <span class="unbudgeted-row__name">{{ cat.name }}</span>
           </div>
           <button class="btn btn-sm btn-ghost" tabindex="-1">+ Sätt budget</button>
@@ -212,7 +214,7 @@ async function handleDelete(limitId) {
 
     <!-- Empty state: no budgets and no spending -->
     <div v-if="rows.length === 0" class="empty-state">
-      <span class="empty-state-icon">📊</span>
+      <BarChart3 class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
       <p class="empty-state-title">Inga budgetar ännu</p>
       <p class="empty-state-text">
         Sätt budgetgränser per kategori för att följa dina utgifter i realtid.
@@ -229,7 +231,7 @@ async function handleDelete(limitId) {
           @keydown.enter="openBudgetForm(cat)"
         >
           <div class="unbudgeted-row__left">
-            <span class="unbudgeted-row__icon" aria-hidden="true">{{ cat.icon }}</span>
+            <CategoryIcon :category-id="cat.id" :size="16" class="unbudgeted-row__icon" aria-hidden="true" />
             <span class="unbudgeted-row__name">{{ cat.name }}</span>
           </div>
           <button class="btn btn-sm btn-ghost" tabindex="-1">+ Sätt budget</button>

@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { todayISO } from '@/utils/format'
+import { X, ChevronDown, ArrowDown, ArrowUp } from 'lucide-vue-next'
 
 const props = defineProps({
   prefill: {
@@ -78,11 +79,7 @@ function handleBackdropClick(e) {
         <div class="modal__header">
           <h2 class="modal__title">Lägg till transaktion</h2>
           <button class="modal__close" @click="handleCancel" aria-label="Stäng">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <X :size="20" :stroke-width="2.5" />
           </button>
         </div>
 
@@ -98,7 +95,7 @@ function handleBackdropClick(e) {
                 :class="{ 'type-toggle__btn--active type-toggle__btn--expense': type === 'expense' }"
                 @click="type = 'expense'"
               >
-                <span aria-hidden="true">↓</span> Utgift
+                <ArrowDown :size="14" :stroke-width="2.5" aria-hidden="true" /> Utgift
               </button>
               <button
                 type="button"
@@ -106,7 +103,7 @@ function handleBackdropClick(e) {
                 :class="{ 'type-toggle__btn--active type-toggle__btn--income': type === 'income' }"
                 @click="type = 'income'"
               >
-                <span aria-hidden="true">↑</span> Inkomst
+                <ArrowUp :size="14" :stroke-width="2.5" aria-hidden="true" /> Inkomst
               </button>
             </div>
           </div>
@@ -147,14 +144,11 @@ function handleBackdropClick(e) {
                   :key="cat.id"
                   :value="cat.id"
                 >
-                  {{ cat.icon }} {{ cat.name }}
+                  {{ cat.name }}
                 </option>
               </select>
               <span class="select-arrow" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
+                <ChevronDown :size="16" :stroke-width="2.5" />
               </span>
             </div>
             <span v-if="errors.category_id" class="form-error">{{ errors.category_id }}</span>

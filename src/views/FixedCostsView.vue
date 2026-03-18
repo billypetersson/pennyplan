@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import FixedCostForm from '@/components/fixedcosts/FixedCostForm.vue'
 import { useFixedCostsStore } from '@/stores/fixedCosts'
 import { formatCurrency } from '@/utils/format'
+import { Pencil, Trash2, ArrowUp, ArrowDown, ChevronsUpDown, ClipboardList, Plus } from 'lucide-vue-next'
 
 const store = useFixedCostsStore()
 
@@ -94,7 +95,7 @@ async function handleDelete(id) {
 
 <template>
   <AppLayout title="Fasta kostnader">
-    <button class="btn btn-primary btn-full" @click="openAdd">+ Lägg till kostnad</button>
+    <button class="btn btn-primary btn-full" @click="openAdd"><Plus :size="16" :stroke-width="2.5" aria-hidden="true" /> Lägg till kostnad</button>
 
     <!-- Summary -->
     <div v-if="costs.length > 0" class="summary-row">
@@ -114,19 +115,19 @@ async function handleDelete(id) {
         <thead>
           <tr>
             <th class="sortable" @click="sort('name')">
-              Namn <span class="sort-icon">{{ sortKey === 'name' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              Namn <span class="sort-icon" aria-hidden="true"><component :is="sortKey === 'name' ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ChevronsUpDown" :size="12" /></span>
             </th>
             <th class="sortable" @click="sort('category')">
-              Kategori <span class="sort-icon">{{ sortKey === 'category' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              Kategori <span class="sort-icon" aria-hidden="true"><component :is="sortKey === 'category' ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ChevronsUpDown" :size="12" /></span>
             </th>
             <th class="col-amount sortable" @click="sort('amount')">
-              Belopp <span class="sort-icon">{{ sortKey === 'amount' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              Belopp <span class="sort-icon" aria-hidden="true"><component :is="sortKey === 'amount' ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ChevronsUpDown" :size="12" /></span>
             </th>
             <th class="sortable" @click="sort('cycle')">
-              Intervall <span class="sort-icon">{{ sortKey === 'cycle' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              Intervall <span class="sort-icon" aria-hidden="true"><component :is="sortKey === 'cycle' ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ChevronsUpDown" :size="12" /></span>
             </th>
             <th class="col-due sortable" @click="sort('due_day')">
-              Förfaller <span class="sort-icon">{{ sortKey === 'due_day' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
+              Förfaller <span class="sort-icon" aria-hidden="true"><component :is="sortKey === 'due_day' ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ChevronsUpDown" :size="12" /></span>
             </th>
             <th class="col-actions"></th>
           </tr>
@@ -140,21 +141,10 @@ async function handleDelete(id) {
             <td class="col-due">{{ cost.due_day ? `dag ${cost.due_day}` : '—' }}</td>
             <td class="col-actions">
               <button class="action-btn" @click="openEdit(cost)" aria-label="Redigera">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
+                <Pencil :size="14" :stroke-width="2" />
               </button>
               <button class="action-btn action-btn--danger" @click="handleDelete(cost.id)" aria-label="Ta bort">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"/>
-                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                  <path d="M10 11v6"/>
-                  <path d="M14 11v6"/>
-                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                </svg>
+                <Trash2 :size="14" :stroke-width="2" />
               </button>
             </td>
           </tr>
@@ -164,7 +154,7 @@ async function handleDelete(id) {
 
     <!-- Empty state -->
     <div v-else class="empty-state">
-      <span class="empty-state-icon">📋</span>
+      <ClipboardList class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
       <p class="empty-state-title">Inga fasta kostnader ännu</p>
       <p class="empty-state-text">
         Lägg till återkommande kostnader som försäkringar, prenumerationer och hyra för att hålla koll på din ekonomi.

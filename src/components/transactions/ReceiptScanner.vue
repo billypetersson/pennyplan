@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { supabase } from '@/lib/supabase'
+import { X, ImageIcon } from 'lucide-vue-next'
 
 const emit = defineEmits(['scanned', 'cancel'])
 
@@ -81,11 +82,7 @@ function openFilePicker() {
         <div class="modal__header">
           <h2 class="modal__title">Skanna kvitto</h2>
           <button class="modal__close" @click="emit('cancel')" aria-label="Stäng">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <X :size="20" :stroke-width="2.5" />
           </button>
         </div>
 
@@ -111,12 +108,7 @@ function openFilePicker() {
               aria-label="Klicka eller dra en bild hit"
             >
               <div class="drop-zone__icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2"/>
-                  <circle cx="8.5" cy="8.5" r="1.5"/>
-                  <polyline points="21 15 16 10 5 21"/>
-                </svg>
+                <ImageIcon :size="40" :stroke-width="1.5" />
               </div>
               <p class="drop-zone__text">Klicka eller dra kvitto hit</p>
               <p class="drop-zone__hint">JPG, PNG eller HEIC</p>

@@ -5,10 +5,11 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const ranges = [
-  { value: '1',  label: '1 dag' },
-  { value: '7',  label: '1 vecka' },
-  { value: '14', label: '14 dagar' },
-  { value: '30', label: '30 dagar' },
+  { value: '1',     label: 'Idag' },
+  { value: '7',     label: 'Senaste veckan' },
+  { value: '14',    label: 'Senaste 14 dagar' },
+  { value: '30',    label: 'Senaste 30 dagar' },
+  { value: 'month', label: 'Denna månad' },
 ]
 </script>
 

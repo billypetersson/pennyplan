@@ -7,6 +7,7 @@ import TransactionList from '@/components/transactions/TransactionList.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import { useTransactionsStore } from '@/stores/transactions'
+import { Plus, ScanLine } from 'lucide-vue-next'
 
 const transactionsStore = useTransactionsStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
@@ -51,34 +52,12 @@ function handleScanned(data) {
   <AppLayout title="Transaktioner">
     <template #header-right>
       <div class="header-actions">
-        <button
-          class="btn btn-ghost btn-sm"
-          @click="showScanner = true"
-          aria-label="Skanna kvitto"
-          title="Skanna kvitto"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            style="width:16px;height:16px;" aria-hidden="true">
-            <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-            <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-            <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-            <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-            <line x1="7" y1="12" x2="17" y2="12"/>
-          </svg>
+        <button class="btn btn-ghost btn-sm" @click="showScanner = true" aria-label="Skanna kvitto" title="Skanna kvitto">
+          <ScanLine :size="16" :stroke-width="2" aria-hidden="true" />
           Skanna
         </button>
-        <button
-          class="btn btn-primary btn-sm"
-          @click="openForm"
-          aria-label="Lägg till transaktion"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            style="width:16px;height:16px;" aria-hidden="true">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+        <button class="btn btn-primary btn-sm" @click="openForm" aria-label="Lägg till transaktion">
+          <Plus :size="16" :stroke-width="2.5" aria-hidden="true" />
           Ny
         </button>
       </div>
@@ -96,24 +75,11 @@ function handleScanned(data) {
 
     <div class="add-btn-container">
       <button class="btn btn-ghost add-btn" @click="showScanner = true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          style="width:18px;height:18px;" aria-hidden="true">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-          <line x1="7" y1="12" x2="17" y2="12"/>
-        </svg>
+        <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
         Skanna kvitto
       </button>
       <button class="btn btn-primary add-btn" @click="openForm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-          style="width:18px;height:18px;" aria-hidden="true">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
+        <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
         Lägg till transaktion
       </button>
     </div>

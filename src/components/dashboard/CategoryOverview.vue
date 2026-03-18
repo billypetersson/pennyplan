@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { formatCurrency, formatDateShort } from '@/utils/format'
+import { ChevronUp, ChevronDown, BarChart3 } from 'lucide-vue-next'
+import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 
 const props = defineProps({
   expensesByCategory: {
@@ -61,12 +63,15 @@ function toggle(id) {
       <div class="category-row__header">
         <div class="category-row__left">
           <span class="category-row__icon" aria-hidden="true">
-            {{ row.isFixed ? '📋' : (row.category?.icon ?? '📦') }}
+            <CategoryIcon :category-id="row.category_id" :size="15" />
           </span>
           <span class="category-row__name">
             {{ row.isFixed ? 'Fasta kostnader' : (row.category?.name ?? row.category_id) }}
           </span>
-          <span class="expand-icon">{{ expanded.has(row.category_id) ? '▲' : '▼' }}</span>
+          <span class="expand-icon" aria-hidden="true">
+            <ChevronUp v-if="expanded.has(row.category_id)" :size="13" :stroke-width="2.5" />
+            <ChevronDown v-else :size="13" :stroke-width="2.5" />
+          </span>
         </div>
         <span class="category-row__amount">{{ formatCurrency(row.amount) }}</span>
       </div>
@@ -108,7 +113,7 @@ function toggle(id) {
   </div>
 
   <div v-else class="empty-state">
-    <span class="empty-state-icon">📊</span>
+    <BarChart3 class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
     <p class="empty-state-title">Inga utgifter ännu</p>
     <p class="empty-state-text">Lägg till transaktioner för att se en kategoriöversikt.</p>
   </div>

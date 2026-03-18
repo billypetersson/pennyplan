@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import TransactionItem from './TransactionItem.vue'
 import { formatDateLong } from '@/utils/format'
+import { ClipboardList } from 'lucide-vue-next'
 
 const props = defineProps({
   transactions: { type: Array, required: true }
@@ -41,7 +42,7 @@ const groupedByDate = computed(() => {
   </div>
 
   <div v-else class="empty-state">
-    <span class="empty-state-icon">📋</span>
+    <ClipboardList class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
     <p class="empty-state-title">Inga transaktioner</p>
     <p class="empty-state-text">Det finns inga transaktioner för den valda månaden.</p>
   </div>

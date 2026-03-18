@@ -71,11 +71,12 @@ defineProps({
 }
 
 .app-header__title {
-  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-text);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
 }
 
 .app-main {

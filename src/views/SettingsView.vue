@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useAuthStore } from '@/stores/auth'
+import { Coins, Globe, Database, LogOut } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -23,7 +24,7 @@ async function handleSignOut() {
       <div class="card settings-section">
         <div class="settings-row">
           <div class="settings-row__left">
-            <span class="settings-row__icon" aria-hidden="true">💱</span>
+            <Coins class="settings-row__icon" :size="20" :stroke-width="1.75" aria-hidden="true" />
             <div>
               <span class="settings-row__label">Valuta</span>
               <span class="settings-row__value">Svensk krona (SEK)</span>
@@ -34,7 +35,7 @@ async function handleSignOut() {
         <div class="divider" />
         <div class="settings-row">
           <div class="settings-row__left">
-            <span class="settings-row__icon" aria-hidden="true">🌐</span>
+            <Globe class="settings-row__icon" :size="20" :stroke-width="1.75" aria-hidden="true" />
             <div>
               <span class="settings-row__label">Språk</span>
               <span class="settings-row__value">Svenska</span>
@@ -51,7 +52,7 @@ async function handleSignOut() {
       <div class="card settings-section">
         <div class="settings-row">
           <div class="settings-row__left">
-            <span class="settings-row__icon" aria-hidden="true">💾</span>
+            <Database class="settings-row__icon" :size="20" :stroke-width="1.75" aria-hidden="true" />
             <div>
               <span class="settings-row__label">Lagring</span>
               <span class="settings-row__value">Supabase (molnet)</span>
@@ -71,7 +72,7 @@ async function handleSignOut() {
       <div class="card settings-section">
         <div class="settings-row">
           <div class="settings-row__left">
-            <span class="settings-row__icon" aria-hidden="true">🚪</span>
+            <LogOut class="settings-row__icon" :size="20" :stroke-width="1.75" aria-hidden="true" />
             <div>
               <span class="settings-row__label">Logga ut</span>
               <span class="settings-row__value">Avslutar din session</span>
@@ -140,9 +141,8 @@ async function handleSignOut() {
 }
 
 .settings-row__icon {
-  font-size: 1.25rem;
-  line-height: 1;
   flex-shrink: 0;
+  color: var(--color-text-muted);
 }
 
 .settings-row__label {
