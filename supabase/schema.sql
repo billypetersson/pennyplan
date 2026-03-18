@@ -34,6 +34,36 @@ create table if not exists public.savings_goals (
   created_at timestamptz default now()
 );
 
+-- Receipt storage bucket
+insert into storage.buckets (id, name, public)
+values ('receipts', 'receipts', false)
+on conflict (id) do nothing;
+
+-- Add receipt_path column to transactions
+alter table public.transactions add column if not exists receipt_path text;
+
+-- Storage RLS policies for receipts bucket
+create policy "Users can upload own receipts"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'receipts'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can read own receipts"
+  on storage.objects for select
+  using (
+    bucket_id = 'receipts'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can delete own receipts"
+  on storage.objects for delete
+  using (
+    bucket_id = 'receipts'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
 -- Row Level Security
 alter table public.transactions enable row level security;
 alter table public.budget_limits enable row level security;
