@@ -29,7 +29,10 @@ async function handleFile(file) {
   error.value = null
 
   try {
-    const base64 = await toBase64(file)
+    const [base64, { data: { user } }] = await Promise.all([
+      toBase64(file),
+      supabase.auth.getUser(),
+    ])
 
     const { data, error: fnError } = await supabase.functions.invoke('scan-receipt', {
       body: JSON.stringify({ image: base64, mimeType: file.type }),
@@ -47,10 +50,18 @@ async function handleFile(file) {
     }
     if (data?.error) throw new Error(data.error)
 
+    // Upload receipt image to Supabase Storage
+    const ext = file.name.split('.').pop() || 'jpg'
+    const path = `${user.id}/${Date.now()}.${ext}`
+    const { error: uploadError } = await supabase.storage
+      .from('receipts')
+      .upload(path, file, { contentType: file.type })
+
     emit('scanned', {
       amount: data.amount ? String(Math.round(data.amount)) : '',
       date: data.date ?? '',
       note: data.note ?? '',
+      receipt_path: uploadError ? null : path,
     })
   } catch (err) {
     error.value = err.message || 'Något gick fel vid scanning'

@@ -21,6 +21,7 @@ const amount = ref(props.prefill.amount ?? '')
 const categoryId = ref('')
 const date = ref(props.prefill.date ?? todayISO())
 const note = ref(props.prefill.note ?? '')
+const receiptPath = ref(props.prefill.receipt_path ?? null)
 const errors = ref({})
 
 // Categories filtered by selected type
@@ -56,7 +57,8 @@ function handleSubmit() {
     amount: Number(amount.value),
     category_id: categoryId.value,
     date: date.value,
-    note: note.value.trim()
+    note: note.value.trim(),
+    ...(receiptPath.value ? { receipt_path: receiptPath.value } : {}),
   })
 }
 

@@ -4,6 +4,16 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.4.0] - 2026-03-18
+
+### Lagt till
+- Kvittoskanning — ladda upp en bild av ett kvitto och låt OCR fylla i belopp, datum och butik automatiskt
+- Kvittobilderna sparas i Supabase Storage och kopplas till transaktionen
+- Kvittoikon visas på transaktioner som har ett kvitto — klicka för att öppna originalbilden
+- Lagringspolicyer (RLS) för kvitto-bucket så att användare bara kan se sina egna kvitton
+
+---
+
 ## [1.3.0] - 2026-03-18
 
 ### Lagt till

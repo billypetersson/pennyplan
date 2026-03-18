@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { formatCurrency } from '@/utils/format'
-import { Trash2 } from 'lucide-vue-next'
+import { Trash2, Receipt } from 'lucide-vue-next'
 import CategoryIcon from '@/components/ui/CategoryIcon.vue'
+import { supabase } from '@/lib/supabase'
 
 const props = defineProps({
   transaction: {
@@ -22,6 +23,15 @@ const category = categoriesStore.getCategoryById(props.transaction.category_id)
 function handleDelete() {
   emit('delete', props.transaction.id)
   showDeleteConfirm.value = false
+}
+
+async function openReceipt() {
+  const { data, error } = await supabase.storage
+    .from('receipts')
+    .createSignedUrl(props.transaction.receipt_path, 3600)
+  if (!error && data?.signedUrl) {
+    window.open(data.signedUrl, '_blank')
+  }
 }
 </script>
 
@@ -45,7 +55,7 @@ function handleDelete() {
         <span v-if="transaction.note" class="transaction-item__note">{{ transaction.note }}</span>
       </div>
 
-      <!-- Amount + delete -->
+      <!-- Amount + actions -->
       <div class="transaction-item__right">
         <span
           class="transaction-item__amount"
@@ -53,6 +63,15 @@ function handleDelete() {
         >
           {{ transaction.type === 'income' ? '+' : '−' }}{{ formatCurrency(transaction.amount) }}
         </span>
+        <button
+          v-if="transaction.receipt_path"
+          class="transaction-item__receipt-btn"
+          @click="openReceipt"
+          aria-label="Visa kvitto"
+          title="Visa kvitto"
+        >
+          <Receipt :size="14" :stroke-width="2" />
+        </button>
         <button
           class="transaction-item__delete-btn"
           @click="showDeleteConfirm = true"
@@ -171,6 +190,22 @@ function handleDelete() {
   font-size: 0.9375rem;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.transaction-item__receipt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.transaction-item__receipt-btn:hover {
+  background-color: rgba(79, 155, 143, 0.1);
 }
 
 .transaction-item__delete-btn {
