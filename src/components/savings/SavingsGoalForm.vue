@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { X } from 'lucide-vue-next'
+import DatePicker from '@/components/ui/DatePicker.vue'
 
 const props = defineProps({
   goal: { type: Object, default: null }
@@ -93,10 +94,10 @@ function handleBackdropClick(e) {
             <label class="form-label" for="goal-date">
               Måldatum <span class="form-optional">(valfritt)</span>
             </label>
-            <input
+            <DatePicker
               id="goal-date"
               v-model="targetDate"
-              type="date"
+              placeholder="Välj måldatum"
             />
           </div>
 

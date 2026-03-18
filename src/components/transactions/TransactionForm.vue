@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { todayISO } from '@/utils/format'
 import { X, ChevronDown, ArrowDown, ArrowUp } from 'lucide-vue-next'
+import DatePicker from '@/components/ui/DatePicker.vue'
 
 const props = defineProps({
   prefill: {
@@ -159,10 +160,9 @@ function handleBackdropClick(e) {
           <!-- Date -->
           <div class="form-group">
             <label class="form-label" for="date">Datum</label>
-            <input
+            <DatePicker
               id="date"
               v-model="date"
-              type="date"
               :class="{ 'input-error': errors.date }"
             />
             <span v-if="errors.date" class="form-error">{{ errors.date }}</span>
