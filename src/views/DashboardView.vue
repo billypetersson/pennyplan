@@ -27,7 +27,7 @@ const savingsStore = useSavingsStore()
 const showForm = ref(false)
 const showScanner = ref(false)
 const prefill = ref({})
-const selectedRange = ref('30')
+const selectedRange = ref('month')
 
 const filteredTransactions = computed(() => {
   if (selectedRange.value === 'month') {
