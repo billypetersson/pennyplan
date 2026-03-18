@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import ThemeToggle from '@/components/ui/ThemeToggle.vue'
+import AppLogo from '@/components/ui/AppLogo.vue'
 import { LayoutDashboard, ArrowLeftRight, BarChart3, PiggyBank, CreditCard, Settings, LogOut } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -46,8 +47,7 @@ function isActive(path) {
 <template>
   <nav class="app-nav" role="navigation" aria-label="Huvudnavigation">
     <div class="nav-logo" aria-hidden="true">
-      <span class="nav-logo__mark">P</span>
-      <span class="nav-logo__name">PennyPlan</span>
+      <AppLogo size="md" />
     </div>
 
     <RouterLink
@@ -198,33 +198,12 @@ function isActive(path) {
   .nav-logo {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    justify-content: center;
     height: var(--header-height);
     padding: 0 1.25rem;
     flex-shrink: 0;
     border-bottom: 1px solid var(--color-border);
     margin-bottom: 0.75rem;
-  }
-
-  .nav-logo__mark {
-    width: 30px;
-    height: 30px;
-    background-color: var(--color-primary);
-    color: #fff;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .nav-logo__name {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text);
-    letter-spacing: -0.02em;
   }
 
   .nav-item {
@@ -267,6 +246,64 @@ function isActive(path) {
   .nav-icon :deep(svg) {
     width: 20px;
     height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  /* Översikt — gentle pulse scale */
+  a.nav-item:nth-of-type(1):hover .nav-icon :deep(svg) {
+    animation: icon-pulse 0.35s ease;
+  }
+
+  /* Transaktioner — slide left-right */
+  a.nav-item:nth-of-type(2):hover .nav-icon :deep(svg) {
+    animation: icon-swap 0.4s ease;
+  }
+
+  /* Budget — grow up from base */
+  a.nav-item:nth-of-type(3):hover .nav-icon :deep(svg) {
+    animation: icon-rise 0.35s ease;
+  }
+
+  /* Sparmål — gentle sway */
+  a.nav-item:nth-of-type(4):hover .nav-icon :deep(svg) {
+    animation: icon-sway 0.45s ease;
+  }
+
+  /* Fasta kostnader — slide right */
+  a.nav-item:nth-of-type(5):hover .nav-icon :deep(svg) {
+    animation: icon-slide 0.35s ease;
+  }
+
+  @keyframes icon-pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes icon-swap {
+    0%   { transform: translateX(0); }
+    30%  { transform: translateX(-4px); }
+    70%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes icon-rise {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes icon-sway {
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(8deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  @keyframes icon-slide {
+    0%   { transform: translateX(0); }
+    40%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
   }
 
   .nav-theme-mobile {

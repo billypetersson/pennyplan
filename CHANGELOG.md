@@ -4,6 +4,16 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.1.0] - 2026-03-18
+
+### Ändrat
+- PennyPlan-logotypen är nu i stor kursiv text (Google Font: Cookie) utan logomärke/box
+- Logotypen centrerad i sidomenyn med mörkgrön färg (`--color-primary-dark`)
+- Inter används nu som typsnitt i hela appen via Google Fonts
+- Teckensnittsrendering ändrad till `subpixel-antialiased` för skarpare text
+
+---
+
 ## [1.0.0] - 2026-03-18
 
 ### Lagt till

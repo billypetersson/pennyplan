@@ -16,8 +16,7 @@
 
     <div v-else class="auth-card">
       <div class="auth-logo">
-        <Coins class="logo-icon" :size="40" :stroke-width="1.5" aria-hidden="true" />
-        <h1>PennyPlan</h1>
+        <AppLogo size="lg" />
         <p>Din enkla budgetapp</p>
       </div>
 
@@ -62,7 +61,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Coins, MailCheck, UserX, UserPlus } from 'lucide-vue-next'
+import { MailCheck, UserX, UserPlus } from 'lucide-vue-next'
+import AppLogo from '@/components/ui/AppLogo.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -124,24 +124,15 @@ async function submit() {
 }
 
 .auth-logo {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
   margin-bottom: 2rem;
-}
-
-.logo-icon {
-  font-size: 2.5rem;
-}
-
-.auth-logo h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin: 0.25rem 0 0;
 }
 
 .auth-logo p {
   color: var(--color-text-muted);
-  margin: 0.25rem 0 0;
   font-size: 0.9rem;
 }
 

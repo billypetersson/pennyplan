@@ -2,7 +2,8 @@
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useAuthStore } from '@/stores/auth'
-import { Coins, Globe, Database, LogOut } from 'lucide-vue-next'
+import { Globe, Database, LogOut } from 'lucide-vue-next'
+import AppLogo from '@/components/ui/AppLogo.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -88,16 +89,8 @@ async function handleSignOut() {
       <h2 class="section-heading">Om appen</h2>
       <div class="card settings-section">
         <div class="about-header">
-          <div class="about-logo" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-              <rect width="40" height="40" rx="10" fill="#4F9B8F"/>
-              <text x="20" y="27" font-size="22" text-anchor="middle" fill="white"
-                font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-                font-weight="700">P</text>
-            </svg>
-          </div>
           <div>
-            <h3 class="about-name">PennyPlan</h3>
+            <AppLogo size="lg" />
             <p class="about-tagline">Enkel och smart budgetering</p>
           </div>
         </div>
@@ -179,17 +172,6 @@ async function handleSignOut() {
   padding: 1rem 1.125rem;
 }
 
-.about-logo svg {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-}
-
-.about-name {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-text);
-}
 
 .about-tagline {
   font-size: 0.8125rem;
