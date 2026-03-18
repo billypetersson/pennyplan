@@ -4,6 +4,18 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.0.0] - 2026-03-18
+
+### Lagt till
+- Bekräftelsesida (`/auth/confirm`) för e-postverifiering efter registrering med animerad välkomstskärm
+- Registreringsformulär på inloggningssidan med flöde för e-postbekräftelse
+- Resend.com används som SMTP-leverantör för att skicka bekräftelsemail
+
+### Åtgärdat
+- `signUp` skickar nu korrekt `emailRedirectTo` till `/auth/confirm` så att bekräftelselänken leder rätt
+
+---
+
 ## [0.9.0] - 2026-03-18
 
 ### Lagt till
