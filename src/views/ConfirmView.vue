@@ -2,7 +2,8 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/lib/supabase'
-import { Coins, CheckCircle2, XCircle, Loader2, Sparkles } from 'lucide-vue-next'
+import { CheckCircle2, XCircle, Loader2, Sparkles } from 'lucide-vue-next'
+import AppLogo from '@/components/ui/AppLogo.vue'
 
 const router = useRouter()
 const status = ref('loading') // loading | success | error
@@ -51,8 +52,7 @@ onMounted(async () => {
   <div class="confirm-page">
     <!-- Loading / Error state -->
     <div v-if="status !== 'success'" class="confirm-card">
-      <Coins class="brand-icon" :size="36" :stroke-width="1.5" aria-hidden="true" />
-      <p class="brand-name">PennyPlan</p>
+      <AppLogo size="lg" class="brand-logo" />
 
       <div v-if="status === 'loading'" class="status-block">
         <Loader2 class="spin" :size="40" :stroke-width="1.5" aria-hidden="true" />
@@ -75,10 +75,7 @@ onMounted(async () => {
           <div class="welcome-icon-wrap">
             <CheckCircle2 class="welcome-check" :size="52" :stroke-width="1.5" aria-hidden="true" />
           </div>
-          <div class="welcome-logo">
-            <Coins class="welcome-coins" :size="28" :stroke-width="1.5" aria-hidden="true" />
-            <span>PennyPlan</span>
-          </div>
+          <AppLogo size="md" />
           <h1 class="welcome-title">Välkommen!</h1>
           <p class="welcome-sub">Din e-post är bekräftad. Du är nu redo att börja budgetera.</p>
           <div class="welcome-divider" />
@@ -116,12 +113,7 @@ onMounted(async () => {
   gap: 0.25rem;
 }
 
-.brand-icon { color: var(--color-primary); }
-
-.brand-name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-primary);
+.brand-logo {
   margin-bottom: 1.5rem;
 }
 
@@ -204,19 +196,6 @@ onMounted(async () => {
   filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.4));
 }
 
-.welcome-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 0.25rem;
-}
-
-.welcome-coins { color: var(--color-primary); }
 
 .welcome-title {
   font-size: 2rem;
