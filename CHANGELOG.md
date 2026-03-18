@@ -7,9 +7,10 @@ Alla ändringar i projektet dokumenteras här.
 ## [1.5.0] - 2026-03-18
 
 ### Lagt till
-- **Registrera månadslön-knapp** på Transaktionssidan — en dedikerad grön knapp (med sedel-ikon) som öppnar transaktionsformuläret förifyllt med typ Inkomst och kategori Lön
+- **Lönestatus-kort** per månad på Transaktionssidan — visar en tydlig "Lägg till lön"-knapp om ingen lön är registrerad för månaden, annars en grön bekräftelse med beloppet
+- Lönen kan bara läggas till en gång per månad via det dedikerade kortet — byter automatiskt till bekräftat läge efter registrering
 - Senast registrerade lönbelopp sparas i localStorage och fylls i automatiskt nästa gång knappen används
-- Stöd för `type` och `category_id` som prefill-parametrar i TransactionForm — möjliggör förifyllning från externa knappar
+- Stöd för `type` och `category_id` som prefill-parametrar i TransactionForm
 
 ---
 
