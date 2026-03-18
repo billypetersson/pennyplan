@@ -7,6 +7,7 @@ const router = createRouter({
   routes: [
     { path: '/login', component: () => import('@/views/LoginView.vue'), meta: { public: true } },
     { path: '/auth/confirm', component: () => import('@/views/ConfirmView.vue'), meta: { public: true } },
+    { path: '/auth/reset-password', component: () => import('@/views/ResetPasswordView.vue'), meta: { public: true } },
     { path: '/', component: DashboardView },
     { path: '/transaktioner', component: () => import('@/views/TransactionsView.vue') },
     { path: '/budget', component: () => import('@/views/BudgetView.vue') },
@@ -17,10 +18,12 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+  if (to.meta.public) return
+
   const { data: { session } } = await supabase.auth.getSession()
   const isLoggedIn = !!session
 
-  if (!to.meta.public && !isLoggedIn) return '/login'
+  if (!isLoggedIn) return '/login'
   if (to.path === '/login' && isLoggedIn) return '/'
 })
 

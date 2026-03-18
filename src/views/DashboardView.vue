@@ -16,6 +16,7 @@ import { useFixedCostsStore } from '@/stores/fixedCosts'
 import { useCategoriesStore } from '@/stores/categories'
 import { useSavingsStore } from '@/stores/savings'
 import { exportMonthPdf } from '@/utils/exportPdf'
+import SkeletonBlock from '@/components/ui/SkeletonBlock.vue'
 
 const router = useRouter()
 const transactionsStore = useTransactionsStore()
@@ -61,6 +62,9 @@ const expensesByCategory = computed(() => {
 })
 
 const hasTransactions = computed(() => filteredTransactions.value.length > 0)
+const isLoading = computed(() =>
+  transactionsStore.loading || fixedCostsStore.loading || savingsStore.loading
+)
 
 onMounted(() => {
   transactionsStore.fetchTransactions()
@@ -124,47 +128,69 @@ function exportPdf() {
 
 
 
-    <!-- Summary cards -->
-    <SummaryCards
-      :income="income"
-      :expenses="expenses"
-      :balance="balance"
-    />
-
-    <!-- Category breakdown -->
-    <section>
-      <h2 class="section-heading">Utgifter</h2>
-      <div class="card">
-        <CategoryOverview
-          :expenses-by-category="expensesByCategory"
-          :transactions="filteredTransactions"
-          :fixed-costs="fixedCostsStore.costs"
-          :fixed-costs-total="fixedCostsStore.totalMonthly"
-        />
+    <!-- Skeleton -->
+    <template v-if="isLoading">
+      <div class="summary-cards-skeleton">
+        <SkeletonBlock height="90px" radius="var(--radius-lg)" />
+        <SkeletonBlock height="90px" radius="var(--radius-lg)" />
+        <SkeletonBlock height="90px" radius="var(--radius-lg)" style="grid-column: 1 / -1" />
       </div>
-    </section>
 
-    <!-- Income vs Expense chart -->
-    <section>
-      <div class="card">
-        <IncomeExpenseChart
-          :transactions="filteredTransactions"
-          :range="selectedRange"
-        />
+      <section>
+        <SkeletonBlock width="80px" height="0.75rem" style="margin-bottom: 0.75rem" />
+        <div class="card skeleton-card-body">
+          <SkeletonBlock v-for="i in 4" :key="i" height="20px" :width="`${85 - i * 8}%`" />
+        </div>
+      </section>
+
+      <div class="card skeleton-card-body">
+        <SkeletonBlock height="160px" radius="var(--radius-md)" />
       </div>
-    </section>
 
-    <!-- Savings goals -->
-    <SavingsGoalWidget :goals="savingsStore.goals" />
+      <div class="card skeleton-card-body">
+        <SkeletonBlock height="80px" radius="var(--radius-md)" />
+      </div>
+    </template>
 
-    <!-- Empty state for the whole month -->
-    <div v-if="!hasTransactions" class="empty-state dashboard-empty">
-      <Lightbulb class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
-      <p class="empty-state-title">Kom igång med PennyPlan</p>
-      <p class="empty-state-text">
-        Lägg till din första inkomst eller utgift med knapparna ovan.
-      </p>
-    </div>
+    <!-- Real content -->
+    <template v-else>
+      <SummaryCards
+        :income="income"
+        :expenses="expenses"
+        :balance="balance"
+      />
+
+      <section>
+        <h2 class="section-heading">Utgifter</h2>
+        <div class="card">
+          <CategoryOverview
+            :expenses-by-category="expensesByCategory"
+            :transactions="filteredTransactions"
+            :fixed-costs="fixedCostsStore.costs"
+            :fixed-costs-total="fixedCostsStore.totalMonthly"
+          />
+        </div>
+      </section>
+
+      <section>
+        <div class="card">
+          <IncomeExpenseChart
+            :transactions="filteredTransactions"
+            :range="selectedRange"
+          />
+        </div>
+      </section>
+
+      <SavingsGoalWidget :goals="savingsStore.goals" />
+
+      <div v-if="!hasTransactions" class="empty-state dashboard-empty">
+        <Lightbulb class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
+        <p class="empty-state-title">Kom igång med PennyPlan</p>
+        <p class="empty-state-text">
+          Lägg till din första inkomst eller utgift med knapparna ovan.
+        </p>
+      </div>
+    </template>
 
     <Transition name="fade">
       <ReceiptScanner
@@ -240,5 +266,18 @@ function exportPdf() {
   background-color: var(--color-card);
   border-radius: var(--radius-lg);
   border: 1.5px dashed var(--color-border);
+}
+
+.summary-cards-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.skeleton-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
 }
 </style>
