@@ -7,7 +7,9 @@ import TransactionList from '@/components/transactions/TransactionList.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import { useTransactionsStore } from '@/stores/transactions'
-import { Plus, ScanLine } from 'lucide-vue-next'
+import { Plus, ScanLine, Banknote } from 'lucide-vue-next'
+
+const SALARY_KEY = 'pennyplan_salary_amount'
 
 const transactionsStore = useTransactionsStore()
 const { selectedMonth } = storeToRefs(transactionsStore)
@@ -28,8 +30,21 @@ function onMonthChange(month) {
 
 async function handleAddTransaction(data) {
   await transactionsStore.addTransaction(data)
+  if (data.type === 'income' && data.category_id === 'income-lon' && data.amount > 0) {
+    localStorage.setItem(SALARY_KEY, String(data.amount))
+  }
   showForm.value = false
   prefill.value = {}
+}
+
+function openSalaryForm() {
+  const saved = localStorage.getItem(SALARY_KEY)
+  prefill.value = {
+    type: 'income',
+    category_id: 'income-lon',
+    ...(saved ? { amount: Number(saved) } : {})
+  }
+  showForm.value = true
 }
 
 function handleDeleteTransaction(id) {
@@ -56,6 +71,10 @@ function handleScanned(data) {
           <ScanLine :size="16" :stroke-width="2" aria-hidden="true" />
           Skanna
         </button>
+        <button class="btn btn-salary btn-sm" @click="openSalaryForm" aria-label="Registrera lön" title="Registrera månadslön">
+          <Banknote :size="16" :stroke-width="2" aria-hidden="true" />
+          Lön
+        </button>
         <button class="btn btn-primary btn-sm" @click="openForm" aria-label="Lägg till transaktion">
           <Plus :size="16" :stroke-width="2.5" aria-hidden="true" />
           Ny
@@ -77,6 +96,10 @@ function handleScanned(data) {
       <button class="btn btn-ghost add-btn" @click="showScanner = true">
         <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
         Skanna kvitto
+      </button>
+      <button class="btn btn-salary add-btn" @click="openSalaryForm">
+        <Banknote :size="18" :stroke-width="2" aria-hidden="true" />
+        Registrera månadslön
       </button>
       <button class="btn btn-primary add-btn" @click="openForm">
         <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
@@ -121,5 +144,17 @@ function handleScanned(data) {
   width: 100%;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
+}
+
+.btn-salary {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border: 1.5px solid var(--color-success);
+  font-weight: 600;
+}
+
+.btn-salary:hover {
+  background-color: var(--color-success);
+  color: #fff;
 }
 </style>

@@ -17,9 +17,9 @@ const emit = defineEmits(['submit', 'cancel'])
 const categoriesStore = useCategoriesStore()
 
 // Form state
-const type = ref('expense')
+const type = ref(props.prefill.type ?? 'expense')
 const amount = ref(props.prefill.amount ?? '')
-const categoryId = ref('')
+const categoryId = ref(props.prefill.category_id ?? '')
 const date = ref(props.prefill.date ?? todayISO())
 const note = ref(props.prefill.note ?? '')
 const receiptPath = ref(props.prefill.receipt_path ?? null)
