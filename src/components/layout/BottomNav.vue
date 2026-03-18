@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import ThemeToggle from '@/components/ui/ThemeToggle.vue'
+import { LayoutDashboard, ArrowLeftRight, BarChart3, PiggyBank, CreditCard, Settings, LogOut } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,49 +28,11 @@ async function handleSignOut() {
 }
 
 const navItems = [
-  {
-    label: 'Översikt',
-    path: '/',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1"/>
-      <rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/>
-      <rect x="14" y="14" width="7" height="7" rx="1"/>
-    </svg>`
-  },
-  {
-    label: 'Transaktioner',
-    path: '/transaktioner',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <polyline points="19 12 12 19 5 12"/>
-    </svg>`
-  },
-  {
-    label: 'Budget',
-    path: '/budget',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10"/>
-      <line x1="12" y1="20" x2="12" y2="4"/>
-      <line x1="6" y1="20" x2="6" y2="14"/>
-    </svg>`
-  },
-  {
-    label: 'Sparmål',
-    path: '/sparmal',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="9"/>
-      <path d="M12 7v5l3 3"/>
-    </svg>`
-  },
-  {
-    label: 'Fasta kostnader',
-    path: '/fasta-kostnader',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="5" width="20" height="14" rx="2"/>
-      <line x1="2" y1="10" x2="22" y2="10"/>
-    </svg>`
-  }
+  { label: 'Översikt',        path: '/',                icon: LayoutDashboard },
+  { label: 'Transaktioner',   path: '/transaktioner',   icon: ArrowLeftRight },
+  { label: 'Budget',          path: '/budget',          icon: BarChart3 },
+  { label: 'Sparmål',         path: '/sparmal',         icon: PiggyBank },
+  { label: 'Fasta kostnader', path: '/fasta-kostnader', icon: CreditCard },
 ]
 
 function isActive(path) {
@@ -96,7 +59,7 @@ function isActive(path) {
       :aria-label="item.label"
       :aria-current="isActive(item.path) ? 'page' : undefined"
     >
-      <span class="nav-icon" v-html="item.icon" aria-hidden="true" />
+      <span class="nav-icon" aria-hidden="true"><component :is="item.icon" :size="20" :stroke-width="2" /></span>
       <span class="nav-label">{{ item.label }}</span>
     </RouterLink>
 
@@ -110,22 +73,15 @@ function isActive(path) {
       <div class="nav-profile__avatar" :style="{ backgroundColor: avatarColor }">
         {{ initials }}
       </div>
-      <ThemeToggle />
-      <RouterLink to="/installningar" class="nav-profile__settings" aria-label="Inställningar" title="Inställningar">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </RouterLink>
-      <button class="nav-profile__logout" @click="handleSignOut" aria-label="Logga ut" title="Logga ut">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-      </button>
+      <div class="nav-profile__icons">
+        <ThemeToggle />
+        <RouterLink to="/installningar" class="nav-profile__settings" aria-label="Inställningar" title="Inställningar">
+          <Settings :size="16" :stroke-width="2" />
+        </RouterLink>
+        <button class="nav-profile__logout" @click="handleSignOut" aria-label="Logga ut" title="Logga ut">
+          <LogOut :size="16" :stroke-width="2" />
+        </button>
+      </div>
     </div>
   </nav>
 </template>
@@ -234,7 +190,7 @@ function isActive(path) {
     border-top: none;
     border-right: 1px solid var(--color-border);
     box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
-    padding: 1.5rem 0 0;
+    padding: 0;
     overflow-y: auto;
     gap: 2px;
   }
@@ -243,7 +199,9 @@ function isActive(path) {
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    padding: 0 1.25rem 1.75rem;
+    height: var(--header-height);
+    padding: 0 1.25rem;
+    flex-shrink: 0;
     border-bottom: 1px solid var(--color-border);
     margin-bottom: 0.75rem;
   }
@@ -345,6 +303,13 @@ function isActive(path) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .nav-profile__icons {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
   }
 
   .nav-profile__settings,

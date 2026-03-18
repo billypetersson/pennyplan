@@ -5,6 +5,7 @@ import SavingsGoalForm from '@/components/savings/SavingsGoalForm.vue'
 import AddFundsModal from '@/components/savings/AddFundsModal.vue'
 import { useSavingsStore } from '@/stores/savings'
 import { formatCurrency, formatDateShort } from '@/utils/format'
+import { Pencil, Target } from 'lucide-vue-next'
 
 const savingsStore = useSavingsStore()
 
@@ -101,11 +102,7 @@ async function handleAddFunds(amount) {
             @click="openEditGoal(goal)"
             aria-label="Redigera mål"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
+            <Pencil :size="14" :stroke-width="2" />
           </button>
         </div>
 
@@ -168,7 +165,7 @@ async function handleAddFunds(amount) {
 
     <!-- Empty state -->
     <div v-else class="empty-state">
-      <span class="empty-state-icon">🎯</span>
+      <Target class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
       <p class="empty-state-title">Inga sparmål ännu</p>
       <p class="empty-state-text">
         Sätt upp ett mål och följ dina framsteg — semester, buffert eller något du drömmer om.

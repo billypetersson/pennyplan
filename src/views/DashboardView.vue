@@ -8,6 +8,8 @@ import RangeSelector from '@/components/dashboard/RangeSelector.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import SavingsGoalWidget from '@/components/dashboard/SavingsGoalWidget.vue'
+import IncomeExpenseChart from '@/components/dashboard/IncomeExpenseChart.vue'
+import { Plus, ScanLine, Lightbulb } from 'lucide-vue-next'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useFixedCostsStore } from '@/stores/fixedCosts'
@@ -28,6 +30,11 @@ const prefill = ref({})
 const selectedRange = ref('30')
 
 const filteredTransactions = computed(() => {
+  if (selectedRange.value === 'month') {
+    const now = new Date()
+    const cutoff = new Date(now.getFullYear(), now.getMonth(), 1)
+    return transactionsStore.transactions.filter(t => new Date(t.date) >= cutoff)
+  }
   const days = Number(selectedRange.value)
   const cutoff = new Date()
   cutoff.setHours(0, 0, 0, 0)
@@ -106,24 +113,11 @@ function exportPdf() {
     <!-- Action buttons -->
     <div class="action-btn-container">
       <button class="btn btn-primary action-btn" @click="openForm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-          style="width:18px;height:18px;" aria-hidden="true">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
+        <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
         Lägg till transaktion
       </button>
       <button class="btn action-btn action-btn-outline" @click="showScanner = true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          style="width:18px;height:18px;" aria-hidden="true">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-          <line x1="7" y1="12" x2="17" y2="12"/>
-        </svg>
+        <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
         Skanna kvitto
       </button>
     </div>
@@ -150,12 +144,22 @@ function exportPdf() {
       </div>
     </section>
 
+    <!-- Income vs Expense chart -->
+    <section>
+      <div class="card">
+        <IncomeExpenseChart
+          :transactions="filteredTransactions"
+          :range="selectedRange"
+        />
+      </div>
+    </section>
+
     <!-- Savings goals -->
     <SavingsGoalWidget :goals="savingsStore.goals" />
 
     <!-- Empty state for the whole month -->
     <div v-if="!hasTransactions" class="empty-state dashboard-empty">
-      <span class="empty-state-icon">💡</span>
+      <Lightbulb class="empty-state-icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
       <p class="empty-state-title">Kom igång med PennyPlan</p>
       <p class="empty-state-text">
         Lägg till din första inkomst eller utgift med knapparna ovan.

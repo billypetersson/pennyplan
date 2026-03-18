@@ -2,7 +2,7 @@
   <div class="auth-page">
     <div class="auth-card">
       <div class="auth-logo">
-        <span class="logo-icon">💰</span>
+        <Coins class="logo-icon" :size="40" :stroke-width="1.5" aria-hidden="true" />
         <h1>PennyPlan</h1>
         <p>Din enkla budgetapp</p>
       </div>
@@ -36,6 +36,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { Coins } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()

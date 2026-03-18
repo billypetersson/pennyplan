@@ -4,6 +4,23 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [0.9.0] - 2026-03-18
+
+### Lagt till
+- Inkomst & Utgifter-diagram på översikten med smooth area chart (kurvor, gradientfyll)
+- Filteralternativ: Idag, Senaste veckan, Senaste 14 dagar, Senaste 30 dagar, Denna månad
+- Lucide-ikoner i hela appen — alla inline SVG:er och emojis ersatta med lucide-vue-next
+- Ny CategoryIcon-komponent som mappar kategorier till Lucide-ikoner
+
+### Ändrat
+- Inkomstlinjen i diagrammet visas som prickad linje utan fyllning
+- Navigationsikoner i sidomenyn och bottennavigationen använder nu Lucide
+- Inställningssidan, modaler och tomma tillstånd använder Lucide-ikoner
+- Användarnamn borttaget från sidomenyn
+- Ikonerna i navigationen grupperade med marginal till höger
+
+---
+
 ## [0.8.0] - 2026-03-17
 
 ### Lagt till

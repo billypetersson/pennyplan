@@ -1,5 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { X } from 'lucide-vue-next'
+import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 
 const props = defineProps({
   category: { type: Object, required: true },
@@ -49,15 +51,11 @@ function handleBackdropClick(e) {
       <div class="modal">
         <div class="modal__header">
           <div class="modal__header-left">
-            <span class="modal__category-icon" aria-hidden="true">{{ category.icon }}</span>
+            <CategoryIcon :category-id="category.id" :size="18" class="modal__category-icon" aria-hidden="true" />
             <h2 class="modal__title">{{ category.name }}</h2>
           </div>
           <button class="modal__close" @click="$emit('cancel')" aria-label="Stäng">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <X :size="20" :stroke-width="2.5" />
           </button>
         </div>
 
@@ -126,7 +124,8 @@ function handleBackdropClick(e) {
 }
 
 .modal__category-icon {
-  font-size: 1.375rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 .modal__title {
@@ -151,10 +150,6 @@ function handleBackdropClick(e) {
   color: var(--color-text);
 }
 
-.modal__close svg {
-  width: 18px;
-  height: 18px;
-}
 
 .modal__body {
   padding: 1.25rem;

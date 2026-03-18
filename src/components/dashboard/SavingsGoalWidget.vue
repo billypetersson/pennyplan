@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { formatCurrency, formatDateShort } from '@/utils/format'
+import { Target } from 'lucide-vue-next'
 
 const props = defineProps({
   goals: { type: Array, required: true }
@@ -58,7 +59,7 @@ const remaining = computed(() => {
 
     <!-- Empty state -->
     <div v-if="goals.length === 0" class="goal-empty card">
-      <span class="goal-empty__icon">🎯</span>
+      <Target class="goal-empty__icon" :size="32" :stroke-width="1.5" aria-hidden="true" />
       <p class="goal-empty__title">Inga sparmål ännu</p>
       <p class="goal-empty__text">Sätt upp ett sparmål för att följa dina framsteg direkt här på översikten.</p>
       <RouterLink to="/sparmal" class="btn btn-primary btn-sm">Skapa sparmål</RouterLink>

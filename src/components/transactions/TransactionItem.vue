@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { formatCurrency } from '@/utils/format'
+import { Trash2 } from 'lucide-vue-next'
+import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 
 const props = defineProps({
   transaction: {
@@ -34,7 +36,7 @@ function handleDelete() {
           :data-tooltip="category?.name ?? transaction.category_id"
           aria-hidden="true"
         >
-          <span>{{ category?.icon ?? '📦' }}</span>
+          <CategoryIcon :category-id="props.transaction.category_id" :size="16" />
         </div>
       </div>
 
@@ -56,14 +58,7 @@ function handleDelete() {
           @click="showDeleteConfirm = true"
           aria-label="Ta bort transaktion"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6"/>
-            <path d="M14 11v6"/>
-            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-          </svg>
+          <Trash2 :size="14" :stroke-width="2" />
         </button>
       </div>
     </div>
@@ -200,10 +195,6 @@ function handleDelete() {
   background-color: var(--color-danger-light);
 }
 
-.transaction-item__delete-btn svg {
-  width: 14px;
-  height: 14px;
-}
 
 /* Confirm state */
 .transaction-item__confirm {

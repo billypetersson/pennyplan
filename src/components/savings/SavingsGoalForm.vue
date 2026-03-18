@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { X } from 'lucide-vue-next'
 
 const props = defineProps({
   goal: { type: Object, default: null }
@@ -49,11 +50,7 @@ function handleBackdropClick(e) {
         <div class="modal__header">
           <h2 class="modal__title">{{ isEditMode ? 'Redigera sparmål' : 'Nytt sparmål' }}</h2>
           <button class="modal__close" @click="$emit('cancel')" aria-label="Stäng">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <X :size="20" :stroke-width="2.5" />
           </button>
         </div>
 
@@ -161,10 +158,6 @@ function handleBackdropClick(e) {
   color: var(--color-text);
 }
 
-.modal__close svg {
-  width: 18px;
-  height: 18px;
-}
 
 .modal__body {
   padding: 1.25rem;
