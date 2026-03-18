@@ -17,7 +17,8 @@ export function formatCurrency(amount) {
  * @returns {string}
  */
 export function formatDateLong(date) {
-  return new Intl.DateTimeFormat('sv-SE', { dateStyle: 'long' }).format(new Date(date))
+  const s = new Intl.DateTimeFormat('sv-SE', { dateStyle: 'long' }).format(new Date(date))
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 /**
@@ -26,7 +27,8 @@ export function formatDateLong(date) {
  * @returns {string}
  */
 export function formatDateShort(date) {
-  return new Intl.DateTimeFormat('sv-SE', { day: 'numeric', month: 'long' }).format(new Date(date))
+  const s = new Intl.DateTimeFormat('sv-SE', { day: 'numeric', month: 'long' }).format(new Date(date))
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 /**
@@ -38,7 +40,8 @@ export function formatDateShort(date) {
 export function formatMonthLabel(month) {
   const [year, m] = month.split('-')
   const date = new Date(Number(year), Number(m) - 1, 1)
-  return new Intl.DateTimeFormat('sv-SE', { month: 'long', year: 'numeric' }).format(date)
+  const s = new Intl.DateTimeFormat('sv-SE', { month: 'long', year: 'numeric' }).format(date)
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 /**
