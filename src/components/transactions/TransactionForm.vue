@@ -2,8 +2,11 @@
 import { ref, computed, watch } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { todayISO } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { X, ChevronDown, ArrowDown, ArrowUp } from 'lucide-vue-next'
 import DatePicker from '@/components/ui/DatePicker.vue'
+
+const { currencySymbol } = useCurrency()
 
 const props = defineProps({
   prefill: {
@@ -113,7 +116,7 @@ function handleBackdropClick(e) {
 
           <!-- Amount -->
           <div class="form-group">
-            <label class="form-label" for="amount">Belopp (SEK)</label>
+            <label class="form-label" for="amount">Belopp ({{ currencySymbol }})</label>
             <div class="amount-input-wrap">
               <input
                 id="amount"
@@ -127,7 +130,7 @@ function handleBackdropClick(e) {
                 :class="{ 'input-error': errors.amount }"
                 autocomplete="off"
               />
-              <span class="amount-input-suffix">kr</span>
+              <span class="amount-input-suffix">{{ currencySymbol }}</span>
             </div>
             <span v-if="errors.amount" class="form-error">{{ errors.amount }}</span>
           </div>

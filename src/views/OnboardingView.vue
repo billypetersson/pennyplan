@@ -14,6 +14,8 @@ const transactionsStore = useTransactionsStore()
 const budgetStore = useBudgetStore()
 const savingsStore = useSavingsStore()
 
+const currencySymbol = computed(() => CURRENCIES.find(c => c.code === draftCurrency.value)?.symbol ?? 'kr')
+
 const TOTAL_STEPS = 6
 const step = ref(1)
 const direction = ref('forward')
@@ -205,7 +207,7 @@ async function handleComplete() {
                 placeholder="0"
                 class="amount-input"
               />
-              <span class="amount-suffix">kr</span>
+              <span class="amount-suffix">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -243,7 +245,7 @@ async function handleComplete() {
                   placeholder="0"
                   class="amount-input"
                 />
-                <span class="amount-suffix">kr</span>
+                <span class="amount-suffix">{{ currencySymbol }}</span>
               </div>
             </div>
           </div>
@@ -282,7 +284,7 @@ async function handleComplete() {
                 placeholder="0"
                 class="amount-input"
               />
-              <span class="amount-suffix">kr</span>
+              <span class="amount-suffix">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -312,11 +314,11 @@ async function handleComplete() {
             </li>
             <li v-if="summary.salary" class="summary-item">
               <span class="summary-item__dot" style="background: #10B981" />
-              Lön: {{ summary.salary.toLocaleString('sv-SE') }} kr
+              Lön: {{ summary.salary.toLocaleString('sv-SE') }} {{ currencySymbol }}
             </li>
             <li v-for="cat in summary.budgets" :key="cat.id" class="summary-item">
               <span class="summary-item__dot" :style="{ background: cat.color }" />
-              Budget för {{ cat.label }}: {{ Number(budgetAmounts[cat.id]).toLocaleString('sv-SE') }} kr
+              Budget för {{ cat.label }}: {{ Number(budgetAmounts[cat.id]).toLocaleString('sv-SE') }} {{ currencySymbol }}
             </li>
             <li v-if="summary.goal" class="summary-item">
               <span class="summary-item__dot" style="background: #4F9B8F" />

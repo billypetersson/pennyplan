@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { currencySymbol } = useCurrency()
 
 const props = defineProps({
   cost: { type: Object, default: null }
@@ -70,7 +73,7 @@ function submit() {
         </div>
 
         <div class="form-group">
-          <label class="form-label">Belopp (kr)</label>
+          <label class="form-label">Belopp ({{ currencySymbol }})</label>
           <input
             v-model="amount"
             class="form-input"

@@ -2,6 +2,9 @@
 import { ref, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 import CategoryIcon from '@/components/ui/CategoryIcon.vue'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { currencySymbol } = useCurrency()
 
 const props = defineProps({
   category: { type: Object, required: true },
@@ -61,7 +64,7 @@ function handleBackdropClick(e) {
 
         <form class="modal__body" @submit.prevent="handleSubmit" novalidate>
           <div class="form-group">
-            <label class="form-label" for="budget-amount">Budgetgräns (SEK)</label>
+            <label class="form-label" for="budget-amount">Budgetgräns ({{ currencySymbol }})</label>
             <div class="amount-input-wrap">
               <input
                 id="budget-amount"
@@ -76,7 +79,7 @@ function handleBackdropClick(e) {
                 autocomplete="off"
                 autofocus
               />
-              <span class="amount-input-suffix">kr</span>
+              <span class="amount-input-suffix">{{ currencySymbol }}</span>
             </div>
             <span v-if="error" class="form-error">{{ error }}</span>
           </div>
