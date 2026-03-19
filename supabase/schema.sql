@@ -13,6 +13,18 @@ create table if not exists public.transactions (
   created_at timestamptz default now()
 );
 
+-- Fixed costs table
+create table if not exists public.fixed_costs (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text not null,
+  amount numeric(12,2) not null check (amount > 0),
+  category text not null,
+  billing_cycle text not null check (billing_cycle in ('monthly', 'bimonthly', 'quarterly', 'yearly')),
+  due_day integer,
+  created_at timestamptz default now()
+);
+
 -- Budget limits table (for Phase 2)
 create table if not exists public.budget_limits (
   id uuid primary key default uuid_generate_v4(),

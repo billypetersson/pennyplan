@@ -4,6 +4,26 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [2.1.0] - 2026-03-19
+
+### Lagt till
+- Onboarding-flöde för nya användare (6 steg): välkommen, valuta/tema, lön, budget, sparmål, klart
+- Varje steg är valfritt att hoppa över — användaren blockeras aldrig
+- Smooth slide-transition mellan steg med riktningskänsla (framåt/bakåt)
+- "Starta om introduktion"-knapp i inställningar för att köra onboarding igen
+- Onboarding visas endast för nya konton — befintliga användare påverkas inte
+- Fakturaläge i kvittoscanners — välj Kvitto eller Faktura, extraherar rätt fält (förfallodatum, fakturanummer, leverantör)
+- "Idag"-knapp i datumväljaren för att snabbt välja dagens datum
+- Knapp för att skanna Kvitto / Faktura på transaktionssidan flyttad till toppen
+- Skannaknappen på översikt och transaktioner har fått färggradient för bättre igenkänning
+
+### Åtgärdat
+- Befintliga användare omdirigerades felaktigt till onboarding — åtgärdat genom att sätta `onboarding_complete: false` explicit vid registrering
+- `fixed_costs`-tabellen saknade `on delete cascade` på `user_id` — orsakade fel vid borttagning av användare
+- `fixed_costs`-tabellen saknade definition i `schema.sql`
+
+---
+
 ## [1.9.0] - 2026-03-19
 
 ### Lagt till
