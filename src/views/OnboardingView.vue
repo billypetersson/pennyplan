@@ -61,9 +61,33 @@ async function handleStep2() {
   navigate(1)
 }
 
-async function handleStep3() {
+function handleStep3() { navigate(1) }
+function handleStep4() { navigate(1) }
+
+function handleStep5() {
+  summary.value = {
+    currency: CURRENCIES.find(c => c.code === draftCurrency.value)?.label ?? draftCurrency.value,
+    salary: salaryAmount.value && Number(salaryAmount.value) > 0 ? Number(salaryAmount.value) : null,
+    budgets: BUDGET_CATEGORIES.filter(c => budgetAmounts.value[c.id] && Number(budgetAmounts.value[c.id]) > 0),
+    goal: goalTitle.value.trim() && goalAmount.value ? goalTitle.value.trim() : null,
+  }
+  navigate(1)
+}
+
+async function handleComplete() {
   saving.value = true
+
+  // Save settings
+  await settingsStore.saveSettings(draftCurrency.value, draftTheme.value)
+
+  // Save salary — delete existing this-month salary first to avoid duplicates
   if (salaryAmount.value && Number(salaryAmount.value) > 0) {
+    const month = new Date().toISOString().slice(0, 7)
+    await transactionsStore.fetchTransactions()
+    const existing = transactionsStore.transactions.find(
+      t => t.type === 'income' && t.category_id === 'income-lon' && t.date.startsWith(month)
+    )
+    if (existing) await transactionsStore.deleteTransaction(existing.id)
     await transactionsStore.addTransaction({
       type: 'income',
       amount: Number(salaryAmount.value),
@@ -72,42 +96,20 @@ async function handleStep3() {
       note: 'Lön',
     })
   }
-  saving.value = false
-  navigate(1)
-}
 
-async function handleStep4() {
-  saving.value = true
+  // Save budget limits
   const month = new Date().toISOString().slice(0, 7)
   for (const [category_id, amount] of Object.entries(budgetAmounts.value)) {
     if (amount && Number(amount) > 0) {
       await budgetStore.upsertLimit({ category_id, month, amount: Number(amount) })
     }
   }
-  saving.value = false
-  navigate(1)
-}
 
-async function handleStep5() {
-  saving.value = true
+  // Save savings goal
   if (goalTitle.value.trim() && goalAmount.value && Number(goalAmount.value) > 0) {
     await savingsStore.addGoal({ title: goalTitle.value.trim(), target_amount: Number(goalAmount.value) })
   }
-  saving.value = false
 
-  // Build summary
-  summary.value = {
-    currency: CURRENCIES.find(c => c.code === draftCurrency.value)?.label ?? draftCurrency.value,
-    salary: salaryAmount.value && Number(salaryAmount.value) > 0 ? Number(salaryAmount.value) : null,
-    budgets: BUDGET_CATEGORIES.filter(c => budgetAmounts.value[c.id] && Number(budgetAmounts.value[c.id]) > 0),
-    goal: goalTitle.value.trim() && goalAmount.value ? goalTitle.value.trim() : null,
-  }
-
-  navigate(1)
-}
-
-async function handleComplete() {
-  saving.value = true
   await settingsStore.completeOnboarding()
   router.push('/')
 }
