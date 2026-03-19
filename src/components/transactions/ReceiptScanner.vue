@@ -9,6 +9,7 @@ const scanning = ref(false)
 const error = ref(null)
 const dragging = ref(false)
 const fileInputRef = ref(null)
+const scanType = ref('receipt')
 
 function toBase64(file) {
   return new Promise((resolve, reject) => {
@@ -35,7 +36,7 @@ async function handleFile(file) {
     ])
 
     const { data, error: fnError } = await supabase.functions.invoke('scan-receipt', {
-      body: JSON.stringify({ image: base64, mimeType: file.type }),
+      body: JSON.stringify({ image: base64, mimeType: file.type, scanType: scanType.value }),
       headers: { 'Content-Type': 'application/json' },
     })
 
@@ -50,9 +51,10 @@ async function handleFile(file) {
     }
     if (data?.error) throw new Error(data.error)
 
-    // Upload receipt image to Supabase Storage
+    // Upload image to Supabase Storage
     const ext = file.name.split('.').pop() || 'jpg'
-    const path = `${user.id}/${Date.now()}.${ext}`
+    const folder = scanType.value === 'invoice' ? 'invoices' : 'receipts'
+    const path = `${user.id}/${folder}/${Date.now()}.${ext}`
     const { error: uploadError } = await supabase.storage
       .from('receipts')
       .upload(path, file, { contentType: file.type })
@@ -88,20 +90,26 @@ function openFilePicker() {
 
 <template>
   <Teleport to="body">
-    <div class="overlay" @click.self="emit('cancel')" role="dialog" aria-modal="true" aria-label="Skanna kvitto">
+    <div class="overlay" @click.self="emit('cancel')" role="dialog" aria-modal="true" aria-label="Skanna Kvitto / Faktura">
       <div class="modal">
         <div class="modal__header">
-          <h2 class="modal__title">Skanna kvitto</h2>
+          <h2 class="modal__title">Skanna Kvitto / Faktura</h2>
           <button class="modal__close" @click="emit('cancel')" aria-label="Stäng">
             <X :size="20" :stroke-width="2.5" />
           </button>
         </div>
 
         <div class="modal__body">
+          <!-- Type toggle -->
+          <div class="scan-type-toggle" role="group" aria-label="Typ av dokument">
+            <button type="button" class="scan-type-btn" :class="{ 'scan-type-btn--active': scanType === 'receipt' }" @click="scanType = 'receipt'">Kvitto</button>
+            <button type="button" class="scan-type-btn" :class="{ 'scan-type-btn--active': scanType === 'invoice' }" @click="scanType = 'invoice'">Faktura</button>
+          </div>
+
           <!-- Scanning state -->
           <div v-if="scanning" class="scan-loading">
             <div class="scan-spinner" aria-hidden="true"></div>
-            <p class="scan-loading__text">Läser kvittot...</p>
+            <p class="scan-loading__text">Läser {{ scanType === 'invoice' ? 'fakturan' : 'kvittot' }}...</p>
           </div>
 
           <!-- Upload zone -->
@@ -121,7 +129,7 @@ function openFilePicker() {
               <div class="drop-zone__icon" aria-hidden="true">
                 <ImageIcon :size="40" :stroke-width="1.5" />
               </div>
-              <p class="drop-zone__text">Klicka eller dra kvitto hit</p>
+              <p class="drop-zone__text">Klicka eller dra {{ scanType === 'invoice' ? 'faktura' : 'kvitto' }} hit</p>
               <p class="drop-zone__hint">JPG, PNG eller HEIC</p>
             </div>
 
@@ -138,7 +146,8 @@ function openFilePicker() {
             <p v-if="error" class="scan-error" role="alert">{{ error }}</p>
 
             <p class="scan-info">
-              Kvittot skannas med OCR och belopp, datum och butik fylls i automatiskt. Du kan granska och justera innan det sparas.
+              {{ scanType === 'invoice' ? 'Belopp, förfallodatum och leverantör fylls i automatiskt.' : 'Belopp, datum och butik fylls i automatiskt.' }}
+              Du kan granska och justera innan det sparas.
             </p>
           </div>
         </div>
@@ -194,6 +203,36 @@ function openFilePicker() {
 
 .modal__body {
   padding: 1.5rem 1.25rem;
+}
+
+/* Scan type toggle */
+.scan-type-toggle {
+  display: flex;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.scan-type-btn {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.scan-type-btn + .scan-type-btn {
+  border-left: 1.5px solid var(--color-border);
+}
+
+.scan-type-btn--active {
+  background-color: rgba(79, 155, 143, 0.1);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 /* Drop zone */

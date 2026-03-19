@@ -5,7 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const MINDEE_MODEL_ID = 'd4577820-3b4e-4394-a3a0-01108f01ad26'
+const MINDEE_RECEIPT_MODEL_ID = 'd4577820-3b4e-4394-a3a0-01108f01ad26'
+const MINDEE_INVOICE_MODEL_ID = '87c3ebe2-21bd-4ed2-8628-aafbdef27a6d'
 const MINDEE_BASE = 'https://api-v2.mindee.net'
 
 async function poll(jobUrl: string, apiKey: string, attempts = 20): Promise<Response> {
@@ -35,7 +36,8 @@ serve(async (req) => {
   }
 
   try {
-    const { image, mimeType } = await req.json()
+    const { image, mimeType, scanType } = await req.json()
+    const isInvoice = scanType === 'invoice'
 
     if (!image) {
       return new Response(JSON.stringify({ error: 'Ingen bild uppladdad' }), {
@@ -49,8 +51,8 @@ serve(async (req) => {
     const blob = new Blob([imageBytes], { type: mimeType || 'image/jpeg' })
 
     const enqueueForm = new FormData()
-    enqueueForm.append('model_id', MINDEE_MODEL_ID)
-    enqueueForm.append('file', blob, 'receipt.jpg')
+    enqueueForm.append('model_id', isInvoice ? MINDEE_INVOICE_MODEL_ID : MINDEE_RECEIPT_MODEL_ID)
+    enqueueForm.append('file', blob, isInvoice ? 'invoice.jpg' : 'receipt.jpg')
 
     const enqueueRes = await fetch(`${MINDEE_BASE}/v2/products/extraction/enqueue`, {
       method: 'POST',
@@ -86,10 +88,21 @@ serve(async (req) => {
 
     const fields = resultData?.inference?.result?.fields ?? {}
 
-    const result = {
-      amount: fields?.total_amount?.value ?? null,
-      date: fields?.date?.value ?? null,
-      note: fields?.supplier_name?.value ?? null,
+    let result: Record<string, unknown>
+    if (isInvoice) {
+      const supplier = fields?.supplier_name?.value ?? null
+      const invoiceNumber = fields?.invoice_number?.value ?? null
+      result = {
+        amount: fields?.total_amount?.value ?? null,
+        date: fields?.due_date?.value ?? fields?.date?.value ?? null,
+        note: supplier && invoiceNumber ? `${supplier} #${invoiceNumber}` : (supplier ?? invoiceNumber ?? null),
+      }
+    } else {
+      result = {
+        amount: fields?.total_amount?.value ?? null,
+        date: fields?.date?.value ?? null,
+        note: fields?.supplier_name?.value ?? null,
+      }
     }
 
     return new Response(JSON.stringify(result), {
