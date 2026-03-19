@@ -15,6 +15,7 @@ const router = createRouter({
     { path: '/fasta-kostnader', component: () => import('@/views/FixedCostsView.vue') },
     { path: '/installningar', component: () => import('@/views/SettingsView.vue') },
     { path: '/installningar/byt-losenord', component: () => import('@/views/ChangePasswordView.vue') },
+    { path: '/onboarding', component: () => import('@/views/OnboardingView.vue') },
   ]
 })
 
@@ -26,7 +27,11 @@ router.beforeEach(async (to) => {
     const isLoggedIn = !!session
 
     if (!isLoggedIn) return '/login'
-    if (to.path === '/login' && isLoggedIn) return '/'
+    if (to.path === '/login') return '/'
+
+    const onboardingComplete = session.user?.user_metadata?.onboarding_complete
+    if (onboardingComplete === false && to.path !== '/onboarding') return '/onboarding'
+    if (onboardingComplete !== false && to.path === '/onboarding') return '/'
   } catch {
     return '/login'
   }

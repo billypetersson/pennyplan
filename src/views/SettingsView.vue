@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore, CURRENCIES } from '@/stores/settings'
-import { Globe, LogOut, Coins, Sun, Moon, KeyRound, Check, Trash2 } from 'lucide-vue-next'
+import { Globe, LogOut, Coins, Sun, Moon, KeyRound, Check, Trash2, RotateCcw } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -40,6 +40,11 @@ async function handleSave() {
 async function handleSignOut() {
   await authStore.signOut()
   router.push('/login')
+}
+
+async function handleRestartOnboarding() {
+  await settingsStore.resetOnboarding()
+  router.push('/onboarding')
 }
 
 const confirmingDelete = ref(false)
@@ -163,6 +168,24 @@ async function handleDeleteAccount() {
           </div>
           <div class="settings-row__right">
             <RouterLink to="/installningar/byt-losenord" class="btn btn-ghost btn-sm">Byt lösenord</RouterLink>
+          </div>
+        </div>
+
+        <div class="divider" />
+
+        <!-- Restart onboarding -->
+        <div class="settings-row">
+          <div class="settings-row__left">
+            <span class="settings-icon settings-icon--teal">
+              <RotateCcw :size="17" :stroke-width="2" aria-hidden="true" />
+            </span>
+            <div>
+              <span class="settings-row__label">Introduktion</span>
+              <span class="settings-row__value">Kör igenom introduktionen igen</span>
+            </div>
+          </div>
+          <div class="settings-row__right">
+            <button class="btn btn-ghost btn-sm" @click="handleRestartOnboarding">Starta om</button>
           </div>
         </div>
 
