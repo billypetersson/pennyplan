@@ -1,11 +1,14 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { formatCurrency, formatDateShort } from '@/utils/format'
+import { formatDateShort } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { Target } from 'lucide-vue-next'
 
 const props = defineProps({
   goals: { type: Array, required: true }
 })
+
+const { formatAmount } = useCurrency()
 
 const selectedId = ref(null)
 
@@ -88,11 +91,11 @@ const remaining = computed(() => {
       <div class="goal-card__amounts">
         <div class="goal-card__amount-block">
           <span class="goal-card__amount-label">Sparat</span>
-          <span class="goal-card__amount-value goal-card__amount-value--current">{{ formatCurrency(goal.current_amount) }}</span>
+          <span class="goal-card__amount-value goal-card__amount-value--current">{{ formatAmount(goal.current_amount) }}</span>
         </div>
         <div class="goal-card__amount-block goal-card__amount-block--right">
           <span class="goal-card__amount-label">Mål</span>
-          <span class="goal-card__amount-value">{{ formatCurrency(goal.target_amount) }}</span>
+          <span class="goal-card__amount-value">{{ formatAmount(goal.target_amount) }}</span>
         </div>
       </div>
 
@@ -116,7 +119,7 @@ const remaining = computed(() => {
 
       <!-- Footer -->
       <div class="goal-card__footer">
-        <span v-if="remaining > 0" class="goal-card__remaining">{{ formatCurrency(remaining) }} kvar att spara</span>
+        <span v-if="remaining > 0" class="goal-card__remaining">{{ formatAmount(remaining) }} kvar att spara</span>
         <span v-if="goal.target_date" class="goal-card__date">Måldatum: {{ formatDateShort(goal.target_date) }}</span>
       </div>
     </div>

@@ -14,6 +14,7 @@ const router = createRouter({
     { path: '/sparmal', component: () => import('@/views/SavingsView.vue') },
     { path: '/fasta-kostnader', component: () => import('@/views/FixedCostsView.vue') },
     { path: '/installningar', component: () => import('@/views/SettingsView.vue') },
+    { path: '/installningar/byt-losenord', component: () => import('@/views/ChangePasswordView.vue') },
   ]
 })
 

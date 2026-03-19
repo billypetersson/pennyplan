@@ -9,8 +9,9 @@ export const useFixedCostsStore = defineStore('fixedCosts', () => {
   const totalMonthly = computed(() => {
     return costs.value.reduce((sum, cost) => {
       if (cost.billing_cycle === 'monthly') return sum + Number(cost.amount)
-      if (cost.billing_cycle === 'yearly') return sum + Number(cost.amount) / 12
+      if (cost.billing_cycle === 'bimonthly') return sum + Number(cost.amount) / 2
       if (cost.billing_cycle === 'quarterly') return sum + Number(cost.amount) / 3
+      if (cost.billing_cycle === 'yearly') return sum + Number(cost.amount) / 12
       return sum
     }, 0)
   })

@@ -7,10 +7,11 @@ import BudgetForm from '@/components/budget/BudgetForm.vue'
 import { useBudgetStore } from '@/stores/budget'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useCategoriesStore } from '@/stores/categories'
-import { formatCurrency } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { BarChart3, ChevronRight } from 'lucide-vue-next'
 import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 
+const { formatAmount } = useCurrency()
 const budgetStore = useBudgetStore()
 const transactionsStore = useTransactionsStore()
 const categoriesStore = useCategoriesStore()
@@ -93,14 +94,14 @@ async function handleDelete(limitId) {
     <div v-if="totalBudgeted > 0" class="budget-summary card">
       <div class="budget-summary__row">
         <span class="budget-summary__label">Totalt budgeterat</span>
-        <span class="budget-summary__value">{{ formatCurrency(totalBudgeted) }}</span>
+        <span class="budget-summary__value">{{ formatAmount(totalBudgeted) }}</span>
       </div>
       <div class="budget-summary__row">
         <span class="budget-summary__label">Totalt spenderat</span>
         <span
           class="budget-summary__value"
           :class="totalSpent > totalBudgeted ? 'amount-expense' : ''"
-        >{{ formatCurrency(totalSpent) }}</span>
+        >{{ formatAmount(totalSpent) }}</span>
       </div>
       <div class="divider" />
       <div class="budget-summary__row">
@@ -108,7 +109,7 @@ async function handleDelete(limitId) {
         <span
           class="budget-summary__value budget-summary__remaining"
           :class="totalBudgeted - totalSpent < 0 ? 'amount-expense' : 'amount-income'"
-        >{{ formatCurrency(totalBudgeted - totalSpent) }}</span>
+        >{{ formatAmount(totalBudgeted - totalSpent) }}</span>
       </div>
     </div>
 
@@ -134,13 +135,13 @@ async function handleDelete(limitId) {
             <div class="budget-row__right">
               <span v-if="row.limit">
                 <span :class="row.status === 'over' ? 'amount-expense' : ''">
-                  {{ formatCurrency(row.spent) }}
+                  {{ formatAmount(row.spent) }}
                 </span>
                 <span class="budget-row__separator">/</span>
-                <span class="budget-row__limit">{{ formatCurrency(row.limit.amount) }}</span>
+                <span class="budget-row__limit">{{ formatAmount(row.limit.amount) }}</span>
               </span>
               <span v-else class="budget-row__no-budget">
-                {{ formatCurrency(row.spent) }}
+                {{ formatAmount(row.spent) }}
               </span>
               <ChevronRight :size="14" :stroke-width="2" class="budget-row__chevron" aria-hidden="true" />
             </div>

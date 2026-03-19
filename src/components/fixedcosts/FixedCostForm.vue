@@ -18,6 +18,7 @@ const CATEGORIES = [
 
 const CYCLES = [
   { value: 'monthly', label: 'Månadsvis' },
+  { value: 'bimonthly', label: 'Varannan månad' },
   { value: 'quarterly', label: 'Kvartalsvis' },
   { value: 'yearly', label: 'Årsvis' },
 ]

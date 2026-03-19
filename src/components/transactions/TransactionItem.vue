@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
-import { formatCurrency } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { Trash2, Receipt } from 'lucide-vue-next'
 import CategoryIcon from '@/components/ui/CategoryIcon.vue'
 import { supabase } from '@/lib/supabase'
@@ -16,6 +16,7 @@ const props = defineProps({
 const emit = defineEmits(['delete'])
 
 const categoriesStore = useCategoriesStore()
+const { formatAmount } = useCurrency()
 const showDeleteConfirm = ref(false)
 
 const category = categoriesStore.getCategoryById(props.transaction.category_id)
@@ -61,7 +62,7 @@ async function openReceipt() {
           class="transaction-item__amount"
           :class="transaction.type === 'income' ? 'amount-income' : 'amount-expense'"
         >
-          {{ transaction.type === 'income' ? '+' : '−' }}{{ formatCurrency(transaction.amount) }}
+          {{ transaction.type === 'income' ? '+' : '−' }}{{ formatAmount(transaction.amount) }}
         </span>
         <button
           v-if="transaction.receipt_path"

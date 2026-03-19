@@ -123,7 +123,7 @@ export function exportMonthPdf({ month, transactions, fixedCosts, fixedCostsTota
 
   // ── Fixed costs breakdown ────────────────────────────────────────────────────
   if (fixedCosts.length > 0) {
-    const CYCLE = { monthly: 'mån', quarterly: 'kvartal', yearly: 'år' }
+    const CYCLE = { monthly: 'mån', bimonthly: 'varannan mån', quarterly: 'kvartal', yearly: 'år' }
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(9)
     doc.setTextColor(...WARNING)

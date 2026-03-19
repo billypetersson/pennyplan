@@ -3,9 +3,10 @@ import { computed, onMounted, ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import FixedCostForm from '@/components/fixedcosts/FixedCostForm.vue'
 import { useFixedCostsStore } from '@/stores/fixedCosts'
-import { formatCurrency } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { Pencil, Trash2, ArrowUp, ArrowDown, ChevronsUpDown, ClipboardList, Plus } from 'lucide-vue-next'
 
+const { formatAmount } = useCurrency()
 const store = useFixedCostsStore()
 
 const showForm = ref(false)
@@ -16,7 +17,7 @@ onMounted(() => store.fetchCosts())
 const sortKey = ref('name')
 const sortDir = ref('asc')
 
-const CYCLE_ORDER = { monthly: 1, quarterly: 2, yearly: 3 }
+const CYCLE_ORDER = { monthly: 1, bimonthly: 2, quarterly: 3, yearly: 4 }
 
 const costs = computed(() => {
   return [...store.costs].sort((a, b) => {
@@ -60,6 +61,7 @@ const CATEGORY_LABELS = {
 
 const CYCLE_LABELS = {
   monthly: 'mån',
+  bimonthly: 'varannan mån',
   quarterly: 'kvartal',
   yearly: 'år',
 }
@@ -101,11 +103,11 @@ async function handleDelete(id) {
     <div v-if="costs.length > 0" class="summary-row">
       <div class="summary-card card">
         <span class="summary-label">Per månad</span>
-        <span class="summary-amount">{{ formatCurrency(store.totalMonthly) }}</span>
+        <span class="summary-amount">{{ formatAmount(store.totalMonthly) }}</span>
       </div>
       <div class="summary-card card">
         <span class="summary-label">Per år</span>
-        <span class="summary-amount">{{ formatCurrency(store.totalYearly) }}</span>
+        <span class="summary-amount">{{ formatAmount(store.totalYearly) }}</span>
       </div>
     </div>
 
@@ -136,7 +138,7 @@ async function handleDelete(id) {
           <tr v-for="cost in costs" :key="cost.id">
             <td class="col-name">{{ cost.name }}</td>
             <td><span class="badge">{{ CATEGORY_LABELS[cost.category] ?? cost.category }}</span></td>
-            <td class="col-amount">{{ formatCurrency(cost.amount) }}</td>
+            <td class="col-amount">{{ formatAmount(cost.amount) }}</td>
             <td class="col-cycle">{{ CYCLE_LABELS[cost.billing_cycle] }}</td>
             <td class="col-due">{{ cost.due_day ? `dag ${cost.due_day}` : '—' }}</td>
             <td class="col-actions">

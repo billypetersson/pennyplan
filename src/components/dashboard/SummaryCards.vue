@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { formatCurrency } from '@/utils/format'
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle2 } from 'lucide-vue-next'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatAmount } = useCurrency()
 
 const props = defineProps({
   income: {
@@ -26,14 +28,14 @@ const balanceIsNegative = computed(() => props.balance < 0)
     <!-- Income -->
     <div class="summary-card summary-card--income">
       <span class="summary-card__label">Inkomster</span>
-      <span class="summary-card__amount">{{ formatCurrency(income) }}</span>
+      <span class="summary-card__amount">{{ formatAmount(income) }}</span>
       <TrendingUp class="summary-card__icon" :size="18" :stroke-width="2" aria-hidden="true" />
     </div>
 
     <!-- Expenses -->
     <div class="summary-card summary-card--expense">
       <span class="summary-card__label">Utgifter</span>
-      <span class="summary-card__amount">{{ formatCurrency(expenses) }}</span>
+      <span class="summary-card__amount">{{ formatAmount(expenses) }}</span>
       <TrendingDown class="summary-card__icon" :size="18" :stroke-width="2" aria-hidden="true" />
     </div>
 
@@ -43,7 +45,7 @@ const balanceIsNegative = computed(() => props.balance < 0)
       :class="{ 'summary-card--negative': balanceIsNegative }"
     >
       <span class="summary-card__label">Kvar att spendera</span>
-      <span class="summary-card__amount">{{ formatCurrency(balance) }}</span>
+      <span class="summary-card__amount">{{ formatAmount(balance) }}</span>
       <AlertTriangle v-if="balanceIsNegative" class="summary-card__icon" :size="18" :stroke-width="2" aria-hidden="true" />
       <CheckCircle2 v-else class="summary-card__icon" :size="18" :stroke-width="2" aria-hidden="true" />
     </div>
