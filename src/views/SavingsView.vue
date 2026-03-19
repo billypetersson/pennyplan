@@ -4,9 +4,11 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import SavingsGoalForm from '@/components/savings/SavingsGoalForm.vue'
 import AddFundsModal from '@/components/savings/AddFundsModal.vue'
 import { useSavingsStore } from '@/stores/savings'
-import { formatCurrency, formatDateShort } from '@/utils/format'
+import { formatDateShort } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { Pencil, Target } from 'lucide-vue-next'
 
+const { formatAmount } = useCurrency()
 const savingsStore = useSavingsStore()
 
 const showGoalForm = ref(false)
@@ -108,9 +110,9 @@ async function handleAddFunds(amount) {
 
         <!-- Amounts -->
         <div class="goal-card__amounts">
-          <span class="goal-card__current">{{ formatCurrency(goal.current_amount) }}</span>
+          <span class="goal-card__current">{{ formatAmount(goal.current_amount) }}</span>
           <span class="goal-card__separator">av</span>
-          <span class="goal-card__target">{{ formatCurrency(goal.target_amount) }}</span>
+          <span class="goal-card__target">{{ formatAmount(goal.target_amount) }}</span>
         </div>
 
         <!-- Progress bar -->

@@ -4,6 +4,30 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.8.0] - 2026-03-19
+
+### Lagt till
+- Anpassad datumväljare (DatePicker) ersätter webbläsarens inbyggda kalender — matchar appens design och fungerar i både ljust och mörkt läge
+- Datumväljaren öppnar sig automatiskt uppåt eller nedåt beroende på tillgängligt utrymme, och hamnar alltid inom skärmen
+- Valutainställning — välj mellan Svensk krona (SEK, standard) och Euro (EUR) under Inställningar
+- Valuta sparas per användare i Supabase och synkas vid inloggning på alla enheter
+- Alla belopp i appen följer vald valuta
+- Temainställning (ljust/mörkt läge) sparas nu per användare i Supabase — synkas vid inloggning
+- Nytt betalningsintervall "Varannan månad" för fasta kostnader — beräknas korrekt i månads- och årssammanställning samt i PDF-exporten
+- "Byt lösenord"-flöde direkt från inställningssidan — inloggade användare kan byta lösenord utan e-postlänk
+
+### Åtgärdat
+- Dashboard visade transaktioner från kommande månader — filtret begränsas nu korrekt till vald månad
+- Navigationen kraschade vid nätverksfel under autentiseringskontroll — hanteras nu med fallback till inloggningssidan
+- `addTransaction` och `addCost` kraschade med "Cannot read property id of null" om sessionen löpt ut — null-kontroll tillagd
+- Procentberäkning för sparmål kraschade vid målbelopp 0 — division med noll förhindras nu
+
+### Förbättrat
+- Inställningssidan omdesignad — färgkodade ikonbehållare, jämnare radavstånd och konsekventa kontroller för alla rader
+- Borttagna oanvända sektioner (Data, Om appen) från inställningssidan
+
+---
+
 ## [1.5.0] - 2026-03-18
 
 ### Lagt till

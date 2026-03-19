@@ -7,11 +7,13 @@ import TransactionList from '@/components/transactions/TransactionList.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import ReceiptScanner from '@/components/transactions/ReceiptScanner.vue'
 import { useTransactionsStore } from '@/stores/transactions'
-import { formatCurrency, formatMonthLabel } from '@/utils/format'
+import { formatMonthLabel } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { Plus, ScanLine, Banknote, CheckCircle2 } from 'lucide-vue-next'
 
 const SALARY_KEY = 'pennyplan_salary_amount'
 
+const { formatAmount } = useCurrency()
 const transactionsStore = useTransactionsStore()
 const { selectedMonth, transactions: allTransactions } = storeToRefs(transactionsStore)
 
@@ -101,7 +103,7 @@ function handleScanned(data) {
       <template v-if="salaryThisMonth">
         <CheckCircle2 :size="18" :stroke-width="2" class="salary-card__icon" aria-hidden="true" />
         <span class="salary-card__label">Lön registrerad</span>
-        <span class="salary-card__amount">{{ formatCurrency(salaryThisMonth.amount) }}</span>
+        <span class="salary-card__amount">{{ formatAmount(salaryThisMonth.amount) }}</span>
       </template>
       <template v-else>
         <Banknote :size="18" :stroke-width="2" class="salary-card__icon" aria-hidden="true" />

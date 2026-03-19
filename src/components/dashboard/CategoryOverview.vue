@@ -1,9 +1,12 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
-import { formatCurrency, formatDateShort } from '@/utils/format'
+import { formatDateShort } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
 import { ChevronUp, ChevronDown, BarChart3 } from 'lucide-vue-next'
 import CategoryIcon from '@/components/ui/CategoryIcon.vue'
+
+const { formatAmount } = useCurrency()
 
 const props = defineProps({
   expensesByCategory: {
@@ -73,7 +76,7 @@ function toggle(id) {
             <ChevronDown v-else :size="13" :stroke-width="2.5" />
           </span>
         </div>
-        <span class="category-row__amount">{{ formatCurrency(row.amount) }}</span>
+        <span class="category-row__amount">{{ formatAmount(row.amount) }}</span>
       </div>
 
       <div class="progress-bar-track">
@@ -97,7 +100,7 @@ function toggle(id) {
           <div v-for="cost in fixedCosts" :key="cost.id" class="fixed-list__item">
             <span class="fixed-list__name">{{ cost.name }}</span>
             <span class="fixed-list__amount">
-              {{ formatCurrency(cost.amount) }}<span class="fixed-list__cycle"> / {{ CYCLE_LABELS[cost.billing_cycle] }}</span>
+              {{ formatAmount(cost.amount) }}<span class="fixed-list__cycle"> / {{ CYCLE_LABELS[cost.billing_cycle] }}</span>
             </span>
           </div>
         </template>
@@ -105,7 +108,7 @@ function toggle(id) {
         <template v-else>
           <div v-for="t in row.items" :key="t.id" class="fixed-list__item">
             <span class="fixed-list__name">{{ t.note || formatDateShort(t.date) }}</span>
-            <span class="fixed-list__amount">{{ formatCurrency(t.amount) }}</span>
+            <span class="fixed-list__amount">{{ formatAmount(t.amount) }}</span>
           </div>
         </template>
       </div>

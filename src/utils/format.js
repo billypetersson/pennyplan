@@ -3,11 +3,11 @@
  * @param {number} amount
  * @returns {string}
  */
-export function formatCurrency(amount) {
+export function formatCurrency(amount, currency = 'SEK') {
   return new Intl.NumberFormat('sv-SE', {
     style: 'currency',
-    currency: 'SEK',
-    maximumFractionDigits: 0
+    currency,
+    maximumFractionDigits: currency === 'SEK' ? 0 : 2,
   }).format(amount)
 }
 

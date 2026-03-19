@@ -33,8 +33,8 @@ const selectedRange = ref('month')
 const filteredTransactions = computed(() => {
   if (selectedRange.value === 'month') {
     const now = new Date()
-    const cutoff = new Date(now.getFullYear(), now.getMonth(), 1)
-    return transactionsStore.transactions.filter(t => new Date(t.date) >= cutoff)
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    return transactionsStore.transactions.filter(t => t.date.startsWith(yearMonth))
   }
   const days = Number(selectedRange.value)
   const cutoff = new Date()

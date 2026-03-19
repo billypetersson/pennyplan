@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { formatCurrency } from '@/utils/format'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatAmount } = useCurrency()
 
 const props = defineProps({
   transactions: { type: Array, default: () => [] },
@@ -157,10 +159,10 @@ const expenseArea = computed(() => areaPath(expensePoints.value))
     <!-- Stat chips -->
     <div class="iec-stats">
       <span class="stat-chip stat-chip--income">
-        {{ formatCurrency(totalIncome) }}
+        {{ formatAmount(totalIncome) }}
       </span>
       <span class="stat-chip stat-chip--expense">
-        {{ formatCurrency(totalExpenses) }}
+        {{ formatAmount(totalExpenses) }}
       </span>
     </div>
 
