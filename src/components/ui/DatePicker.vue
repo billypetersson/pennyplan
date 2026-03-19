@@ -136,6 +136,13 @@ function selectDay(day) {
   isOpen.value = false
 }
 
+function selectToday() {
+  const d = new Date()
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  emit('update:modelValue', iso)
+  isOpen.value = false
+}
+
 function isSelected(day) {
   return selectedDate.value?.toDateString() === day.date.toDateString()
 }
@@ -215,6 +222,11 @@ onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
             >
               {{ day.date.getDate() }}
             </button>
+          </div>
+
+          <!-- Today shortcut -->
+          <div class="dp__footer">
+            <button type="button" class="dp__today-btn" @click="selectToday">Idag</button>
           </div>
         </div>
       </Transition>
@@ -352,6 +364,28 @@ onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
 .dp__day--selected:hover {
   background-color: var(--color-primary-dark);
+}
+
+.dp__footer {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+}
+
+.dp__today-btn {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s;
+}
+
+.dp__today-btn:hover {
+  background-color: rgba(79, 155, 143, 0.1);
 }
 
 .dp-pop-enter-active,

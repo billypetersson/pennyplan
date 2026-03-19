@@ -82,7 +82,7 @@ function handleScanned(data) {
   <AppLayout title="Transaktioner">
     <template #header-right>
       <div class="header-actions">
-        <button class="btn btn-ghost btn-sm" @click="showScanner = true" aria-label="Skanna kvitto" title="Skanna kvitto">
+        <button class="btn btn-ghost btn-sm" @click="showScanner = true" aria-label="Skanna Kvitto / Faktura" title="Skanna Kvitto / Faktura">
           <ScanLine :size="16" :stroke-width="2" aria-hidden="true" />
           Skanna
         </button>
@@ -92,6 +92,17 @@ function handleScanned(data) {
         </button>
       </div>
     </template>
+
+    <div class="add-btn-container">
+      <button class="btn btn-primary add-btn" @click="openForm">
+        <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
+        Lägg till transaktion
+      </button>
+      <button class="btn add-btn add-btn--scan" @click="showScanner = true">
+        <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
+        Skanna Kvitto / Faktura
+      </button>
+    </div>
 
     <MonthSelector
       :model-value="selectedMonth"
@@ -118,17 +129,6 @@ function handleScanned(data) {
       :transactions="transactions"
       @delete="handleDeleteTransaction"
     />
-
-    <div class="add-btn-container">
-      <button class="btn btn-ghost add-btn" @click="showScanner = true">
-        <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
-        Skanna kvitto
-      </button>
-      <button class="btn btn-primary add-btn" @click="openForm">
-        <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
-        Lägg till transaktion
-      </button>
-    </div>
 
     <Transition name="fade">
       <ReceiptScanner
@@ -211,7 +211,7 @@ function handleScanned(data) {
 /* Bottom add buttons */
 .add-btn-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5rem;
   padding-top: 0.5rem;
 }
@@ -220,5 +220,18 @@ function handleScanned(data) {
   width: 100%;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
+}
+
+.add-btn--scan {
+  background: linear-gradient(135deg, rgba(79,155,143,0.12), rgba(99,102,241,0.12));
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.add-btn--scan:hover {
+  background: linear-gradient(135deg, rgba(79,155,143,0.22), rgba(99,102,241,0.22));
+  box-shadow: 0 2px 12px rgba(79,155,143,0.2);
+  transform: translateY(-1px);
 }
 </style>

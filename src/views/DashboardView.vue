@@ -122,9 +122,9 @@ function exportPdf() {
         <Plus :size="18" :stroke-width="2.5" aria-hidden="true" />
         Lägg till transaktion
       </button>
-      <button class="btn action-btn action-btn-outline" @click="showScanner = true">
+      <button class="btn action-btn action-btn--scan" @click="showScanner = true">
         <ScanLine :size="18" :stroke-width="2" aria-hidden="true" />
-        Skanna kvitto
+        Skanna Kvitto / Faktura
       </button>
     </div>
 
@@ -252,15 +252,17 @@ function exportPdf() {
   font-size: 1rem;
 }
 
-.action-btn-outline {
-  background-color: transparent;
+.action-btn--scan {
+  background: linear-gradient(135deg, rgba(79,155,143,0.12), rgba(99,102,241,0.12));
   color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 
-.action-btn-outline:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
+.action-btn--scan:hover {
+  background: linear-gradient(135deg, rgba(79,155,143,0.22), rgba(99,102,241,0.22));
+  box-shadow: 0 2px 12px rgba(79,155,143,0.2);
+  transform: translateY(-1px);
 }
 
 .dashboard-empty {
