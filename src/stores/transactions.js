@@ -56,6 +56,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function addTransaction(payload) {
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Inte inloggad')
     const { data, error } = await supabase
       .from('transactions')
       .insert({ ...payload, user_id: user.id })

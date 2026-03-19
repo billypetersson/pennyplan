@@ -20,11 +20,15 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   if (to.meta.public) return
 
-  const { data: { session } } = await supabase.auth.getSession()
-  const isLoggedIn = !!session
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    const isLoggedIn = !!session
 
-  if (!isLoggedIn) return '/login'
-  if (to.path === '/login' && isLoggedIn) return '/'
+    if (!isLoggedIn) return '/login'
+    if (to.path === '/login' && isLoggedIn) return '/'
+  } catch {
+    return '/login'
+  }
 })
 
 export default router

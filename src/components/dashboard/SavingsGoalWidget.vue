@@ -19,7 +19,7 @@ watch(() => props.goals, (goals) => {
 const goal = computed(() => props.goals.find(g => g.id === selectedId.value) ?? null)
 
 const percentage = computed(() => {
-  if (!goal.value) return 0
+  if (!goal.value || !goal.value.target_amount) return 0
   return Math.min(Math.round((goal.value.current_amount / goal.value.target_amount) * 100), 100)
 })
 

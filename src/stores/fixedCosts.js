@@ -29,6 +29,7 @@ export const useFixedCostsStore = defineStore('fixedCosts', () => {
 
   async function addCost(payload) {
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Inte inloggad')
     const { data, error } = await supabase
       .from('fixed_costs')
       .insert({ ...payload, user_id: user.id })
