@@ -37,10 +37,12 @@ const filteredTransactions = computed(() => {
     return transactionsStore.transactions.filter(t => t.date.startsWith(yearMonth))
   }
   const days = Number(selectedRange.value)
+  const today = new Date()
   const cutoff = new Date()
-  cutoff.setHours(0, 0, 0, 0)
   cutoff.setDate(cutoff.getDate() - (days - 1))
-  return transactionsStore.transactions.filter(t => new Date(t.date) >= cutoff)
+  const toStr   = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  const fromStr = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-${String(cutoff.getDate()).padStart(2, '0')}`
+  return transactionsStore.transactions.filter(t => t.date >= fromStr && t.date <= toStr)
 })
 
 const income = computed(() =>

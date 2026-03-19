@@ -4,6 +4,24 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [1.9.0] - 2026-03-19
+
+### Lagt till
+- Radera konto-knapp med bekräftelsepopup — all data raderas permanent via Supabase RPC `delete_user`
+- "SÄKERT?!"-hover-animation på raderingsknappen som varning innan bekräftelse
+- Spara inställningar-knapp — ändringar i valuta och tema förhandsgranskas men sparas explicit
+- Temavalet uppdateras direkt vid toggle utan att vänta på sparning
+
+### Åtgärdat
+- Belopp med ören visade bara en decimal (34,5 kr) — visas nu korrekt som 34,50 kr; heltal visas utan decimaler
+
+### Förbättrat
+- Inställningssidan: alla rader justerade horisontellt — högra kontroller är nu konsekvent högerjusterade med fast bredd
+- Inställningssidan: mer luftig topp- och bottenmarginal i varje kort
+- Inställningssidan: kompaktare radavstånd mellan alternativ
+
+---
+
 ## [1.8.0] - 2026-03-19
 
 ### Lagt till

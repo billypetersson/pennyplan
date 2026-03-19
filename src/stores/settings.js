@@ -10,7 +10,7 @@ export const CURRENCIES = [
 
 export const useSettingsStore = defineStore('settings', () => {
   const currency = ref('SEK')
-  const theme = ref('light')
+  const theme = ref(localStorage.getItem('theme') ?? 'light')
 
   async function fetchSettings() {
     const { data: { user } } = await supabase.auth.getUser()
@@ -37,5 +37,21 @@ export const useSettingsStore = defineStore('settings', () => {
     applyTheme(value === 'dark')
   }
 
-  return { currency, theme, fetchSettings, setCurrency, setTheme }
+  // Preview theme visually without persisting to Supabase
+  function previewTheme(value) {
+    theme.value = value
+    applyTheme(value === 'dark')
+  }
+
+  async function saveSettings(newCurrency, newTheme) {
+    const { error } = await supabase.auth.updateUser({
+      data: { currency: newCurrency, theme: newTheme }
+    })
+    if (error) throw error
+    currency.value = newCurrency
+    theme.value = newTheme
+    applyTheme(newTheme === 'dark')
+  }
+
+  return { currency, theme, fetchSettings, setCurrency, setTheme, previewTheme, saveSettings }
 })
