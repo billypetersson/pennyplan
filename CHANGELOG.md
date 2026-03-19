@@ -4,6 +4,18 @@ Alla ändringar i projektet dokumenteras här.
 
 ---
 
+## [2.2.0] - 2026-03-19
+
+### Åtgärdat
+- Valuta visas nu korrekt i alla formulär (TransactionForm, BudgetForm, FixedCostForm, SavingsGoalForm, AddFundsModal) — tidigare hårdkodat som "kr" eller "SEK"
+- `useCurrency`-composablen exporterar nu `currencySymbol` för direkt användning i mallar
+- Onboarding sparar nu alla ändringar (lön, budget, sparmål) först vid sista steget — förhindrar dubbelposter vid bakåtnavigering
+- Valuta och tema sparas direkt i steg 2 så att inställningarna finns kvar om användaren lämnar onboardingen
+- Om lön redan finns för månaden ersätts den vid omstart av onboarding istället för att en ny läggs till
+- Befintliga användare omdirigerades felaktigt till onboarding — åtgärdat
+
+---
+
 ## [2.1.0] - 2026-03-19
 
 ### Lagt till
