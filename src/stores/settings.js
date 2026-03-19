@@ -53,5 +53,15 @@ export const useSettingsStore = defineStore('settings', () => {
     applyTheme(newTheme === 'dark')
   }
 
-  return { currency, theme, fetchSettings, setCurrency, setTheme, previewTheme, saveSettings }
+  async function completeOnboarding() {
+    const { error } = await supabase.auth.updateUser({ data: { onboarding_complete: true } })
+    if (error) throw error
+  }
+
+  async function resetOnboarding() {
+    const { error } = await supabase.auth.updateUser({ data: { onboarding_complete: false } })
+    if (error) throw error
+  }
+
+  return { currency, theme, fetchSettings, setCurrency, setTheme, previewTheme, saveSettings, completeOnboarding, resetOnboarding }
 })
