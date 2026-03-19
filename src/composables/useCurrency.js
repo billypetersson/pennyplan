@@ -1,4 +1,5 @@
-import { useSettingsStore } from '@/stores/settings'
+import { computed } from 'vue'
+import { useSettingsStore, CURRENCIES } from '@/stores/settings'
 import { formatCurrency } from '@/utils/format'
 
 export function useCurrency() {
@@ -8,5 +9,9 @@ export function useCurrency() {
     return formatCurrency(amount, settingsStore.currency)
   }
 
-  return { formatAmount }
+  const currencySymbol = computed(() =>
+    CURRENCIES.find(c => c.code === settingsStore.currency)?.symbol ?? 'kr'
+  )
+
+  return { formatAmount, currencySymbol }
 }

@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { X } from 'lucide-vue-next'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { currencySymbol } = useCurrency()
 
 const props = defineProps({
   goal: { type: Object, required: true }
@@ -45,7 +48,7 @@ function handleBackdropClick(e) {
           <p class="modal__goal-name">{{ goal.title }}</p>
 
           <div class="form-group">
-            <label class="form-label" for="funds-amount">Belopp (SEK)</label>
+            <label class="form-label" for="funds-amount">Belopp ({{ currencySymbol }})</label>
             <div class="amount-input-wrap">
               <input
                 id="funds-amount"
@@ -60,7 +63,7 @@ function handleBackdropClick(e) {
                 autocomplete="off"
                 autofocus
               />
-              <span class="amount-input-suffix">kr</span>
+              <span class="amount-input-suffix">{{ currencySymbol }}</span>
             </div>
             <span v-if="error" class="form-error">{{ error }}</span>
           </div>

@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue'
 import { X } from 'lucide-vue-next'
 import DatePicker from '@/components/ui/DatePicker.vue'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { currencySymbol } = useCurrency()
 
 const props = defineProps({
   goal: { type: Object, default: null }
@@ -71,7 +74,7 @@ function handleBackdropClick(e) {
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="goal-amount">Målbelopp (SEK)</label>
+            <label class="form-label" for="goal-amount">Målbelopp ({{ currencySymbol }})</label>
             <div class="amount-input-wrap">
               <input
                 id="goal-amount"
@@ -85,7 +88,7 @@ function handleBackdropClick(e) {
                 :class="{ 'input-error': errors.targetAmount }"
                 autocomplete="off"
               />
-              <span class="amount-input-suffix">kr</span>
+              <span class="amount-input-suffix">{{ currencySymbol }}</span>
             </div>
             <span v-if="errors.targetAmount" class="form-error">{{ errors.targetAmount }}</span>
           </div>
