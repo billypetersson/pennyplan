@@ -54,9 +54,16 @@ function openSalaryForm() {
     : null
   const amount = saved ? Number(saved) : (lastSalary ? lastSalary.amount : undefined)
 
+  const [year, month] = selectedMonth.value.split('-').map(Number)
+  const isCurrentMonth = new Date().getFullYear() === year && new Date().getMonth() + 1 === month
+  const date = isCurrentMonth
+    ? `${year}-${String(month).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`
+    : `${year}-${String(month).padStart(2, '0')}-01`
+
   prefill.value = {
     type: 'income',
     category_id: 'income-lon',
+    date,
     ...(amount ? { amount } : {})
   }
   showForm.value = true
